@@ -1,7 +1,22 @@
 #ifndef MINISHELL_H
-# define MINISHELL_H
-#include <stdio.h>
+#define MINISHELL_H
+
 #include "../libft/libft.h"
+#include <stdio.h>          // printf
+#include <stdlib.h>         // malloc, free, exit
+#include <unistd.h>         // fork, execve, pipe, dup, dup2, isatty, ttyname, ttyslot, getcwd, chdir, close, write, access
+#include <fcntl.h>          // open
+#include <sys/types.h>      // pid_t, mode_t
+#include <sys/wait.h>       // wait, waitpid, wait3, wait4
+#include <signal.h>         // signal, sigaction, sigemptyset, sigaddset, kill
+#include <sys/stat.h>       // stat, lstat, fstat, unlink
+#include <dirent.h>         // opendir, readdir, closedir
+#include <errno.h>          // errno, perror, strerror
+#include <termios.h>        // tcsetattr, tcgetattr
+#include <termcap.h>        // tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
+#include <sys/ioctl.h>      // ioctl
+#include <readline/readline.h> // readline, rl_*
+#include <readline/history.h>  // add_history
 
 
 typedef enum e_token_type
@@ -35,5 +50,5 @@ typedef struct s_shell_state
 
 }   t_shell_state;
 
-
+char *get_prompt(shell_state *state);
 #endif

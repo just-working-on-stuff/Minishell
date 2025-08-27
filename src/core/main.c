@@ -1,24 +1,33 @@
 #include "../include/minishell.h"
 
- #include <readline/readline.h>
 int main(int ac, char **av, char **env)
 {
-    (void)ac;
     (void)av;
     (void)env;
     
+    t_shell_state state;
+    state.last_status = 0;
     if (ac != 1)
     {
-       return (1);
+        printf("Hint: you need to write ./minishell alone\n");
+        return (1);
     }
     while(1)
     {
         char *buffer = readline("Sea Cow: ");
-        printf("%s\n", buffer);
-        //
+        if (buffer == NULL)
+        {
+            printf("exit\n");
+            exit(state.last_status);
+        }
+        if (isspace(buffer))
+        {
+            free(buffer);
+            continue;
+        }
+        else
+            add_history(buffer);
     }
-    
-    
 }
 
 // t_token *token;
