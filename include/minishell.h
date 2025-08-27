@@ -50,5 +50,5 @@ typedef struct s_shell_state
 
 }   t_shell_state;
 
-char *get_prompt(shell_state *state);
+char *get_prompt(t_shell_state *state);
 #endif
