@@ -10,7 +10,7 @@ RLINC   = -I/opt/vagrant/embedded/include
 RLFLAGS = -lreadline -lhistory
 
 CORE    = src/core
-SRCS    = $(CORE)/main.c
+SRCS    = $(CORE)/main.c\ prompt.c\
 OBJS    = $(SRCS:.c=.o)
 
 all: $(NAME)

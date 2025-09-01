@@ -51,4 +51,8 @@ typedef struct s_shell_state
 }   t_shell_state;
 
 char *get_prompt(t_shell_state *state);
+static char *build_interactive_prompt(void);
+static char *build_from_dir(const char *dir);
+
+
 #endif
