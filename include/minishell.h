@@ -54,5 +54,9 @@ char *get_prompt(t_shell_state *state);
 static char *build_interactive_prompt(void);
 static char *build_from_dir(const char *dir);
 
+/*Utilities*/
+int	is_blank_line(const char *s);
+int	ft_isspace(int c);
+
 
 #endif

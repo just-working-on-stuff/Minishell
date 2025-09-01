@@ -28,6 +28,4 @@ Pass downstream: later days will actually tokenize/execute; for now just stub th
 Memory: always free(line) before next iteration.
 
 Keep “last status” as state->last_status and pass state* everywhere. Don’t store it globally.
-
-
 */
