@@ -1,37 +1,48 @@
-NAME    = minishell
-HEADER  = ./include
-LIBFT   = libft/libft.a
-CC      = cc
-CFLAGS  = -Wall -Werror -Wextra -g -I $(HEADER)
+# NAME    = minishell
+# HEADER  = ./include
+# LIBFT   = libft/libft.a
+# CC      = cc
+# CFLAGS  = -Wall -Werror -Wextra -g -I $(HEADER)
 
-# Readline config (Vagrant setup)
-RLDIR   = -L/opt/vagrant/embedded/lib
-RLINC   = -I/opt/vagrant/embedded/include
-RLFLAGS = -lreadline -lhistory
+# # Readline config (Vagrant setup)
+# RLDIR   = -L/opt/vagrant/embedded/lib
+# RLINC   = -I/opt/vagrant/embedded/include
+# RLFLAGS = -lreadline -lhistory
 
-CORE    = src/core
-SRCS    = $(CORE)/main.c\ prompt.c\
-OBJS    = $(SRCS:.c=.o)
+# CORE    = src/core
+# SRCS    = $(CORE)/main.c\ prompt.c\
+# OBJS    = $(SRCS:.c=.o)
 
-all: $(NAME)
+# all: $(NAME)
 
-$(LIBFT):
-	make -C ./libft
+# $(LIBFT):
+# 	make -C ./libft
 
-$(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(RLINC) $(OBJS) $(LIBFT) $(RLDIR) $(RLFLAGS) -o $(NAME)
+# $(NAME): $(OBJS) $(LIBFT)
+# 	$(CC) $(CFLAGS) $(RLINC) $(OBJS) $(LIBFT) $(RLDIR) $(RLFLAGS) -o $(NAME)
 
-%.o: %.c
-	$(CC) $(CFLAGS) $(RLINC) -c $< -o $@
+# %.o: %.c
+# 	$(CC) $(CFLAGS) $(RLINC) -c $< -o $@
 
-clean:
-	rm -rf $(OBJS)
-	make clean -C ./libft
+# clean:
+# 	rm -rf $(OBJS)
+# 	make clean -C ./libft
 
-fclean: clean
-	rm -f $(NAME)
-	make fclean -C ./libft
+# fclean: clean
+# 	rm -f $(NAME)
+# 	make fclean -C ./libft
 
-re: fclean all
+# re: fclean all
 
-.PHONY: all clean fclean re
+# .PHONY: all clean fclean re
+
+
+
+NAME = minishell
+
+REM = rm -rf
+
+SRCS = \
+	src/core/main.c \
+	src/core/prompt.c \
+	
