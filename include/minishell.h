@@ -40,25 +40,20 @@ typedef struct s_token
 {
     char *value;
     int type;
-}   t_token;
+}	t_token;
 
 typedef struct s_shell_state
 {
-  int last_status;
- char **env;
- t_token *token;
-pid_t active_child;
-sig_atomic_t  got_sigint;
+	int last_status;
+	char **env;
+	t_token *token;
+	pid_t active_child;
+	sig_atomic_t  got_sigint;
+}	t_shell_state;
 
-}   t_shell_state;
-
-// char *get_prompt(t_shell_state *state);
-// static char *build_interactive_prompt(void);
-// static char *build_from_dir(const char *dir);
-
-// /*Utilities*/
-// int	is_blank_line(const char *s);
-// int	ft_isspace(int c);
-
+typedef struct s_data
+{
+	//fil this up
+}	t_data;
 
 #endif
