@@ -25,7 +25,7 @@ typedef enum e_token_type
 	REDIRECT_IN,
 	REDIRECT_OUT,
 	REDIRECT_APPEND,
-	HEREDOC,
+	HEREDOC, //(<<) → special redirection: feed a block of text until a delimiter line.
 	PIPE,
 	LOGIC_AND,
 	LOGIC_OR,
