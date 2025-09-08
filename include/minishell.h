@@ -36,27 +36,27 @@ typedef enum e_token_type
 	DELIMITER
 }						t_token_type;
 
-typedef struct s_token
-{
-    char *value;
-    int type;
-}   t_token;
+// typedef struct s_token
+// {
+//     char *value;
+//     int type;
+// }   t_token;
 
-typedef struct s_shell_state
-{
-  int last_status;
-  char **env;
-    t_token *token;
+// typedef struct s_shell_state
+// {
+//   int last_status;
+//   char **env;
+//     t_token *token;
 
-}   t_shell_state;
+// }   t_shell_state;
 
-char *get_prompt(t_shell_state *state);
-static char *build_interactive_prompt(void);
-static char *build_from_dir(const char *dir);
+// char *get_prompt(t_shell_state *state);
+// static char *build_interactive_prompt(void);
+// static char *build_from_dir(const char *dir);
 
-/*Utilities*/
-int	is_blank_line(const char *s);
-int	ft_isspace(int c);
+// /*Utilities*/
+// int	is_blank_line(const char *s);
+// int	ft_isspace(int c);
 
 
 #endif
