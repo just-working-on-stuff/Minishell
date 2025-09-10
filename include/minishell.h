@@ -17,6 +17,7 @@
 #include <sys/ioctl.h>      // ioctl
 #include <readline/readline.h> // readline, rl_*
 #include <readline/history.h>  // add_history
+#include <errno.h>	//errno, EINTR
 
 
 typedef enum e_token_type
@@ -55,5 +56,8 @@ typedef struct s_data
 {
 	//fil this up
 }	t_data;
+
+void	setup_parent_signals(void);
+void	setup_child_signals(void);
 
 #endif

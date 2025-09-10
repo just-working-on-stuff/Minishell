@@ -5,8 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/08 10:20:46 by codespace          +##    +              */
-/*   Updated: 2025/09/08 10:25:17 by codespace       ###  ##########.fr       */
+/*   Created: 2025/09/08 10:20:46 by codespace         #+#    #+#             */
+/*   Updated: 2025/09/10 11:51:50 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../include/minishell.h"
+
+void	signals2(void)
+{
+	signal(SIGQUIT, SIG_DFL);
+}
