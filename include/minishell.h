@@ -47,9 +47,9 @@ typedef struct s_shell_state
 {
 	int last_status;
 	char **env;
-	t_token *token;
-	pid_t active_child;
-	sig_atomic_t  got_sigint;
+	t_token 	*token;
+	pid_t	 active_child;
+	// sig_atomic_t  got_sigint;
 }	t_shell_state;
 
 typedef struct s_data

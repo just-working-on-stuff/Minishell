@@ -6,13 +6,12 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 10:49:30 by codespace         #+#    #+#             */
-/*   Updated: 2025/09/10 11:51:46 by codespace        ###   ########.fr       */
+/*   Updated: 2025/09/14 09:05:13 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static t_shell_state *g_state = NULL;
 
 static void	clear_rl_line(void)
 {
@@ -34,12 +33,12 @@ static	void handle_sigint(int signo)
 	rl_redisplay();
 }
 
-static 	void hsndle_sigquit(int signo)
+static 	void handle_sigqit(int signo)
 {
 	(void)signo;
 }
 
-void setup_parent_signals(t_shell_state *state)
+void setup_parent_signals(void)
 {
 	struct sigaction sa;
 	

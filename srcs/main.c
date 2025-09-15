@@ -6,13 +6,16 @@ int main(int argc, char **argv, char **env)
 {
     // t_data  data;
     char    *line;
-    int     last_status = 0;              /* NEW: track $? locally */
-
+    int     last_status = 0;       
+	t_shell_state 	state;       /* NEW: track $? locally */
+	
     (void)argc;
     (void)argv;
     (void)env;
     // init_data(&data, argc, argv);
     // if (!make_env(&data, env))
+	//after fork = pid;
+	state.active_child = 0
 
     setup_parent_signals();               /* NEW: install parent signal handlers */
 
