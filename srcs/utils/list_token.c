@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 static int  token_new_element(t_token **new, char *str, int type)
 {

@@ -6,11 +6,11 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 10:20:46 by codespace         #+#    #+#             */
-/*   Updated: 2025/09/16 14:59:13 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/09/16 15:24:59 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	signals2(void)
 {

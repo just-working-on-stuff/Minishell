@@ -3,7 +3,10 @@ NAME = minishell
 CC = cc
 FLAGS = -Wall -Werror -Wextra 
 
-SRCS = srcs/main.c \
+SRCS =	srcs/main.c \
+		srcs/utils/list_token.c \
+		srcs/utils/signals.c \
+		srcs/utils/signals2.c \
 
 OBJS = $(SRCS:.c=.o)
 
