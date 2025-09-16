@@ -4,6 +4,7 @@
         "stdlib.h": "c",
         "minishell.h": "c",
         "libft.h": "c",
-        "random": "c"
+        "random": "c",
+        "errno.h": "c"
     }
 }

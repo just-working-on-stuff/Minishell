@@ -1,6 +1,7 @@
 #ifndef MINISHELL_H
 #define MINISHELL_H
-
+#include <readline/readline.h> // readline, rl_*
+#include <readline/history.h>  // add_history
 #include "../libft/libft.h"
 #include <stdio.h>          // printf
 #include <stdlib.h>         // malloc, free, exit
@@ -15,8 +16,6 @@
 #include <termios.h>        // tcsetattr, tcgetattr
 #include <termcap.h>        // tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
 #include <sys/ioctl.h>      // ioctl
-#include <readline/readline.h> // readline, rl_*
-#include <readline/history.h>  // add_history
 #include <errno.h>	//errno, EINTR
 
 typedef struct s_token
