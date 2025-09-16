@@ -19,28 +19,12 @@
 #include <readline/history.h>  // add_history
 #include <errno.h>	//errno, EINTR
 
-
-typedef enum e_token_type
-{
-	WORD,
-	REDIRECT_IN,
-	REDIRECT_OUT,
-	REDIRECT_APPEND,
-	HEREDOC, //(<<) → special redirection: feed a block of text until a delimiter line.
-	PIPE,
-	LOGIC_AND,
-	LOGIC_OR,
-	BRACKET,
-	COMMAND,
-	ARGUMENT,
-	FILENAME,
-	DELIMITER
-}						t_token_type;
-
 typedef struct s_token
 {
-    char *value;
+    char *str;
     int type;
+	struct s_token *prev;
+	struct s_token *next;
 }	t_token;
 
 typedef struct s_shell_state
@@ -51,6 +35,13 @@ typedef struct s_shell_state
 	pid_t	 active_child;
 	// sig_atomic_t  got_sigint;
 }	t_shell_state;
+
+typedef struct s_list
+{
+	char			*str;
+	struct s_list	*prev;
+	struct s_list	*next;
+}	t_list;
 
 typedef struct s_data
 {
