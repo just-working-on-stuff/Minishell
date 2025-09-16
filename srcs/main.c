@@ -1,4 +1,4 @@
-#include "../include/minishell.h"
+#include "minishell.h"
 #include <readline/readline.h> // readline, rl_*
 #include <readline/history.h>  // add_history
 
@@ -15,7 +15,7 @@ int main(int argc, char **argv, char **env)
     // init_data(&data, argc, argv);
     // if (!make_env(&data, env))
 	//after fork = pid;
-	state.active_child = 0
+	state.active_child = 0;
 
     setup_parent_signals();               /* NEW: install parent signal handlers */
 
