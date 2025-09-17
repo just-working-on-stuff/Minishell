@@ -5,53 +5,56 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/08 10:49:30 by codespace         #+#    #+#             */
-/*   Updated: 2025/09/17 15:49:00 by aalbugar         ###   ########.fr       */
+/*   Created: 2025/09/17 17:17:19 by aalbugar          #+#    #+#             */
+/*   Updated: 2025/09/17 17:17:24 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-
-/* SIGINT = Ctrl-C while at the prompt */
-static	void handle_sigint(int signo)
+static void handle_sigint(int signo)
 {
-	(void)signo; /* we know which signal this handler is for */
-	write(STDOUT_FILENO, "\n", 1); /* print a newline (async-signal-safe)    */
-	rl_on_new_line();   
-	rl_replace_line("", 0);
-	rl_redisplay();
+    (void)signo;
+    write(STDOUT_FILENO, "\n", 1);
+    rl_on_new_line();
+    rl_replace_line("", 0);
+    rl_redisplay();
 }
 
-static 	void handle_sigqit(int signo)
-{
-	(void)signo;
-}
+/* PARENT: install handlers */
 void setup_parent_signals(void)
 {
-    struct sigaction sa;
+    struct sigaction sa_int;
+    struct sigaction sa_quit;
 
-    sigemptyset(&sa.sa_mask);  ///* start with an empty mask of blocked signals */
-    sa.sa_flags = 0;
-	///* NO SA_RESTART (key to our no-global design) */
+    /* SIGINT (Ctrl-C): no SA_RESTART so readline returns with EINTR */
+    sigemptyset(&sa_int.sa_mask);
+    sa_int.sa_flags   = 0;
+    sa_int.sa_handler = handle_sigint;
+    sigaction(SIGINT, &sa_int, NULL);
 
-    sa.sa_handler = handle_sigint;
-    sigaction(SIGINT, &sa, NULL);
+    /* SIGQUIT (Ctrl-\): IGNORE so readline doesn't get interrupted → no jump */
+    sigemptyset(&sa_quit.sa_mask);
+    sa_quit.sa_flags   = SA_RESTART;     /* harmless; ensures syscalls restart if any */
+    sa_quit.sa_handler = SIG_IGN;
+    sigaction(SIGQUIT, &sa_quit, NULL);
 
-    sa.sa_handler = handle_sigqit;   /* ignore Ctrl-\ at prompt */
-    sigaction(SIGQUIT, &sa, NULL);
-
-    sa.sa_handler = SIG_IGN;          /* <-- ignore Ctrl-Z so minishell doesn’t suspend */
-    sigaction(SIGTSTP, &sa, NULL);
+    /* (optional) also ignore Ctrl-Z so shell doesn't suspend */
+    struct sigaction sa_tstp;
+    sigemptyset(&sa_tstp.sa_mask);
+    sa_tstp.sa_flags   = SA_RESTART;
+    sa_tstp.sa_handler = SIG_IGN;
+    sigaction(SIGTSTP, &sa_tstp, NULL);
 }
 
-void	setup_child_signals(void)
+/* CHILD: restore defaults before execve */
+void setup_child_signals(void)
 {
-	struct sigaction sa;
-
+    struct sigaction sa;
     sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
-    sa.sa_handler = SIG_DFL;        // restore defaults for external programs
+    sa.sa_flags   = 0;
+    sa.sa_handler = SIG_DFL;
     sigaction(SIGINT,  &sa, NULL);
     sigaction(SIGQUIT, &sa, NULL);
+    sigaction(SIGTSTP, &sa, NULL);
 }
