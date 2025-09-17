@@ -21,7 +21,7 @@ int main(int argc, char **argv, char **env)
     while (1)
     {
         errno = 0;                        /* NEW: so we can detect EINTR from readline */
-        line = readline("lolipop 🍭 $");
+        line = readline("lolipop 🍭$ ");
         if (line == NULL)
         {
             if (errno == EINTR)           /* NEW: Ctrl-C at prompt interrupted readline */
