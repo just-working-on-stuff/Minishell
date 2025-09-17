@@ -13,16 +13,6 @@
 #include "../minishell.h"
 
 
-static void	clear_rl_line(void)
-{
-	// reset cursor & tell readline we’re on a fresh line
-	rl_on_new_line();
-	// put "" into buffer, no new history entry, keep undo
-	rl_replace_line("", 0); //0 = don’t add this replacement line to history,
-							//1 = would add to history.
-}
-
-
 /* SIGINT = Ctrl-C while at the prompt */
 static	void handle_sigint(int signo)
 {

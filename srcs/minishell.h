@@ -1,22 +1,22 @@
 #ifndef MINISHELL_H
-#define MINISHELL_H
-#include <readline/readline.h> // readline, rl_*
-#include <readline/history.h>  // add_history
-#include "../libft/libft.h"
-#include <stdio.h>          // printf
-#include <stdlib.h>         // malloc, free, exit
-#include <unistd.h>         // fork, execve, pipe, dup, dup2, isatty, ttyname, ttyslot, getcwd, chdir, close, write, access
-#include <fcntl.h>          // open
-#include <sys/types.h>      // pid_t, mode_t
-#include <sys/wait.h>       // wait, waitpid, wait3, wait4
-#include <signal.h>         // signal, sigaction, sigemptyset, sigaddset, kill
-#include <sys/stat.h>       // stat, lstat, fstat, unlink
-#include <dirent.h>         // opendir, readdir, closedir
-#include <errno.h>          // errno, perror, strerror
-#include <termios.h>        // tcsetattr, tcgetattr
-#include <termcap.h>        // tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
-#include <sys/ioctl.h>      // ioctl
-#include <errno.h>	//errno, EINTR
+# define MINISHELL_H
+# include <stdio.h>          // printf
+# include <readline/readline.h> // readline, rl_*
+# include <readline/history.h>  // add_history
+// #include <readline/readline.h>
+// #include <readline/history.h>
+
+# include "../libft/libft.h"
+# include <fcntl.h>
+# include <stdio.h> 
+# include <stdlib.h>
+# include <unistd.h>
+# include <signal.h>
+# include <errno.h>
+# include <sys/stat.h>
+# include <sys/wait.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 typedef struct s_token
 {

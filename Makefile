@@ -1,28 +1,49 @@
-NAME = minishell
+NAME        := minishell
 
-CC = cc
-FLAGS = -Wall -Werror -Wextra 
+CC          := cc
+CFLAGS      := -Wall -Wextra -Werror
 
-SRCS =	srcs/main.c \
-		srcs/utils/list_token.c \
-		srcs/utils/signals.c \
-		srcs/utils/signals2.c \
+# --- Sources / Objects ---
+SRCS := srcs/main.c \
+        srcs/utils/list_token.c \
+        srcs/utils/signals.c \
+        srcs/utils/signals2.c
+OBJS := $(SRCS:.c=.o)
 
-OBJS = $(SRCS:.c=.o)
+# --- Libft ---
+LIBFT_DIR   := ./libft
+LIBFT       := $(LIBFT_DIR)/libft.a
+LIBFT_INC   := -I$(LIBFT_DIR)
 
+# --- Readline (Vagrant path you showed) ---
+# Use the *parent* include dir; headers are <readline/readline.h>
+READLINE_INC := -I/opt/vagrant/embedded/include
+READLINE_LIB := -L/opt/vagrant/embedded/lib -lreadline
+# If you still get link errors, try also:
+# READLINE_LIB := -L/opt/vagrant/embedded/lib -lreadline -lncurses
+
+INCS        := -I. $(LIBFT_INC) $(READLINE_INC)
+
+# --- Rules ---
 all: $(NAME)
 
-$(NAME): $(OBJS)
-	$(CC) $(FLAGS) $(OBJS) -o $(NAME)
+$(NAME): $(LIBFT) $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(READLINE_LIB) -o $(NAME)
+
+$(LIBFT):
+	$(MAKE) -C $(LIBFT_DIR)
 
 %.o: %.c
-	$(CC) $(FLAGS) -c $< -o $@ 
+	$(CC) $(CFLAGS) $(INCS) -c $< -o $@
 
 clean:
 	rm -f $(OBJS)
+	$(MAKE) -C $(LIBFT_DIR) clean
 
-fclean:
+fclean: clean
 	rm -f $(NAME)
+	$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
 
+.PHONY: all clean fclean re
