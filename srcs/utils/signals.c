@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 10:49:30 by codespace         #+#    #+#             */
-/*   Updated: 2025/09/16 15:26:39 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/09/17 15:49:00 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,22 @@ static 	void handle_sigqit(int signo)
 {
 	(void)signo;
 }
-
 void setup_parent_signals(void)
 {
-	struct sigaction sa;
-	
-	sigemptyset(&sa.sa_mask); ///* start with an empty mask of blocked signals */
-	sa.sa_flags = 0;	    ///* NO SA_RESTART (key to our no-global design) */
-	sa.sa_handler = handle_sigint;
-	sigaction(SIGINT, &sa, NULL);
-	
-	sa.sa_handler = handle_sigqit;
-	sigaction(SIGQUIT, &sa, NULL);
+    struct sigaction sa;
 
+    sigemptyset(&sa.sa_mask);  ///* start with an empty mask of blocked signals */
+    sa.sa_flags = 0;
+	///* NO SA_RESTART (key to our no-global design) */
+
+    sa.sa_handler = handle_sigint;
+    sigaction(SIGINT, &sa, NULL);
+
+    sa.sa_handler = handle_sigqit;   /* ignore Ctrl-\ at prompt */
+    sigaction(SIGQUIT, &sa, NULL);
+
+    sa.sa_handler = SIG_IGN;          /* <-- ignore Ctrl-Z so minishell doesn’t suspend */
+    sigaction(SIGTSTP, &sa, NULL);
 }
 
 void	setup_child_signals(void)

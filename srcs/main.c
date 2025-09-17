@@ -1,13 +1,11 @@
 #include "minishell.h"
-#include <readline/readline.h> // readline, rl_*
-#include <readline/history.h>  // add_history
 
 int main(int argc, char **argv, char **env)
 {
     // t_data  data;
-    char    *line;
-    int     last_status = 0;       
-	t_shell_state 	state;       /* NEW: track $? locally */
+    char            *line;
+    int             last_status = 0;       
+    t_shell_state   state;       /* NEW: track $? locally */
 	
     (void)argc;
     (void)argv;
@@ -15,9 +13,10 @@ int main(int argc, char **argv, char **env)
     // init_data(&data, argc, argv);
     // if (!make_env(&data, env))
 	//after fork = pid;
-	state.active_child = 0;
+    state.active_child = 0;      /* initialize: 0 = at prompt */
 
-    setup_parent_signals();               /* NEW: install parent signal handlers */
+    setup_parent_signals();
+	disable_echoctl();       /* NEW: install parent signal handlers */
 
     while (1)
     {
@@ -36,6 +35,14 @@ int main(int argc, char **argv, char **env)
 
         if (*line != '\0')                /* NEW: only store non-empty lines */
             add_history(line);
+
+        /* 🔹 TEST HOOK: run /bin/echo hello */
+        if (line && line[0] == 't')   /* type 't' at prompt to test */
+        {
+            char *const av[] = {"/bin/echo", "hello", NULL};
+            last_status = run_simple_command(av, env, &state);
+            printf("last_status = %d\n", last_status);  /* debug print */
+        }
 
         free(line);
     }

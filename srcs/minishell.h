@@ -49,5 +49,7 @@ typedef struct s_data
 
 void	setup_parent_signals(void);
 void	setup_child_signals(void);
+int run_simple_command(char *const argv[], char *const envp[], t_shell_state *state);
 
+void disable_echoctl(void);
 #endif

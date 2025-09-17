@@ -6,8 +6,10 @@ CFLAGS      := -Wall -Wextra -Werror
 # --- Sources / Objects ---
 SRCS := srcs/main.c \
         srcs/utils/list_token.c \
+		srcs/utils/utils.c \
         srcs/utils/signals.c \
-        srcs/utils/signals2.c
+        srcs/utils/signals2.c\
+		srcs/exec/run_simple.c
 OBJS := $(SRCS:.c=.o)
 
 # --- Libft ---

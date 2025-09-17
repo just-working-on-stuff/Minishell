@@ -26,6 +26,9 @@ static void add_first(t_token **list, t_token *new)
     (*list)->prev = *list;
     (*list)->next = *list;
 }
+//When list is empty, create a circular doubly linked list with the
+//new node pointing to itself as both next and prev.
+
 
 int append_token(t_token **list, char *str, int type)
 {
@@ -44,7 +47,9 @@ int append_token(t_token **list, char *str, int type)
     }
     return (1);
 }
-/*add note to what this function does*/
+/*Add a new token to the list. If empty → call add_first.
+   Else → insert new token at the end (before head), fixing next/prev links.
+   Returns 1 on success. */
  
 void    free_token(t_token **list)
 {
@@ -65,4 +70,5 @@ void    free_token(t_token **list)
     free(current);
     *list = NULL;
 }
-/*add note on what this does*/
+//Free the entire circular token list, including each token string.
+//Resets list pointer to NULL to avoid dangling reference. 
