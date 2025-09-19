@@ -14,7 +14,6 @@ int main(int argc, char **argv, char **env)
     // if (!make_env(&data, env))
 	//after fork = pid;
     state.active_child = 0;      /* initialize: 0 = at prompt */
-
     setup_parent_signals();
 	disable_echoctl();       /* NEW: install parent signal handlers */
 

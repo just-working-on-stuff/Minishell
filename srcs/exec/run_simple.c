@@ -1,13 +1,24 @@
-#include "../minishell.h"
 
-/* Helper: turn waitpid()'s status into a shell exit code for $? */
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   run_simple.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/16 09:31:14 by codespace         #+#    #+#             */
+/*   Updated: 2025/09/16 10:01:27 by codespace        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 static int compute_status_from_wait(int status)
 {
-    if (WIFEXITED(status))
-        return (WEXITSTATUS(status));
-    if (WIFSIGNALED(status))
-        return (128 + WTERMSIG(status)); /* e.g., SIGINT(2) -> 130 */
-    return (1);
+    if (WIFEXITED(status)) //returns true if the child process ended normally
+        return (WEXITSTATUS(status));//extracts the actual exit code
+    if (WIFSIGNALED(status))//is true if the child process was killed by a signal.
+        return (128 + WTERMSIG(status));//gives the signal number that killed the child.
+    return (1); /* fallback */ // gneric error
+>>>>>>> 420b4c2 (a)
 }
 
 int run_simple_command(char *const argv[], char *const envp[], t_shell_state *state)
