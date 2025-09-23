@@ -6,11 +6,11 @@
 /*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:46:20 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/09/17 16:53:38 by aalbugar         ###   ########.fr       */
+/*   Updated: 2025/09/23 11:34:44 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 #include <termios.h>
 
 void    disable_echoctl(void)

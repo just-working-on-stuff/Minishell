@@ -11,6 +11,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minishell.h"
+
 static int compute_status_from_wait(int status)
 {
     if (WIFEXITED(status)) //returns true if the child process ended normally
@@ -18,7 +20,6 @@ static int compute_status_from_wait(int status)
     if (WIFSIGNALED(status))//is true if the child process was killed by a signal.
         return (128 + WTERMSIG(status));//gives the signal number that killed the child.
     return (1); /* fallback */ // gneric error
->>>>>>> 420b4c2 (a)
 }
 
 int run_simple_command(char *const argv[], char *const envp[], t_shell_state *state)

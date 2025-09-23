@@ -6,11 +6,11 @@
 /*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 17:17:19 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/09/17 17:17:24 by aalbugar         ###   ########.fr       */
+/*   Updated: 2025/09/23 11:34:35 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 static void handle_sigint(int signo)
 {
