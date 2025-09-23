@@ -32,7 +32,6 @@ typedef struct s_shell_state
 	char **env;
 	t_token 	*token;
 	pid_t	 active_child;
-	// sig_atomic_t  got_sigint;
 }	t_shell_state;
 
 typedef struct s_list
@@ -42,14 +41,38 @@ typedef struct s_list
 	struct s_list	*next;
 }	t_list;
 
+
+
+typedef struct s_cmd
+{
+	char	**argv; // array of args /0
+	int		infile; // fd for input (default = STDIN_FILENO)
+	int		outfile;// fd for output (default = STDOUT_FILENO)
+	struct s_cmd	*next; // next command (after pipe)
+}t_cmd;
+
 typedef struct s_data
 {
 	//fil this up
 }	t_data;
+
+
+/* ===================== TOKENS ===================== */
+
+# define TOK_CMD       0
+# define TOK_ARG       1
+# define TOK_PIPE      2
+# define TOK_REDIR_IN  3
+# define TOK_REDIR_OUT 4
+# define TOK_APPEND    5
+# define TOK_HEREDOC   6
+
+/*================signals===============*/
 
 void	setup_parent_signals(void);
 void	setup_child_signals(void);
 int run_simple_command(char *const argv[], char *const envp[], t_shell_state *state);
 
 void disable_echoctl(void);
+
 #endif
