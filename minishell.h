@@ -75,4 +75,18 @@ int run_simple_command(char *const argv[], char *const envp[], t_shell_state *st
 
 void disable_echoctl(void);
 
+/* ===================== PARSING ===================== */
+
+t_token *lexer(char *line);
+t_cmd   *parser(t_token *tokens, char **envp);
+char    *expand_value(char *word, char **envp, int last_exit);
+
+void    free_token(t_token **list);
+void    free_cmds(t_cmd *cmds);
+
+int     handle_heredoc(char *delimiter); // returns fd
+t_token *new_token(char *str, int type);
+void add_token_back(t_token **lst, t_token *new);
+void    print_tokens(t_token *lst);
+
 #endif

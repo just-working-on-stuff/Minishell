@@ -9,7 +9,10 @@ SRCS := srcs/main.c \
 		srcs/utils/utils.c \
         srcs/utils/signals.c \
         srcs/utils/signals2.c\
-		srcs/exec/run_simple.c
+		srcs/exec/run_simple.c\
+		srcs/parsing/lexer.c\
+		srcs/parsing/lexers_utils.c
+
 OBJS := $(SRCS:.c=.o)
 
 # --- Libft ---
