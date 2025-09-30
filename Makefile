@@ -11,7 +11,10 @@ SRCS := srcs/main.c \
         srcs/utils/signals2.c\
 		srcs/exec/run_simple.c\
 		srcs/parsing/lexer.c\
-		srcs/parsing/lexers_utils.c
+		srcs/parsing/lexers_utils.c\
+		srcs/parsing/parser_utils.c\
+		srcs/parsing/parser.c\
+		srcs/parsing/cmd_fd.c\
 
 OBJS := $(SRCS:.c=.o)
 

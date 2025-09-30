@@ -1,10 +1,34 @@
 #include "minishell.h"
 
+static void print_cmds(t_cmd *cmds)
+{
+    int i;
+
+    while (cmds)
+    {
+        printf("CMD:\n");
+        if (cmds->argv)
+        {
+            i = 0;
+            while (cmds->argv[i])
+            {
+                printf("  argv[%d] = %s\n", i, cmds->argv[i]);
+                i++;
+            }
+        }
+        printf("  infile  = %d\n", cmds->infile);
+        printf("  outfile = %d\n", cmds->outfile);
+        cmds = cmds->next;
+    }
+}
+
 int main(int argc, char **argv, char **env)
 {
     char            *line;
     int             last_status = 0;       
     t_shell_state   state;       /* track $? locally */
+    t_token         *tokens;     /* for lexer */
+    t_cmd           *cmds;       /* for parser */
 
     (void)argc;
     (void)argv;
@@ -31,11 +55,14 @@ int main(int argc, char **argv, char **env)
         if (*line != '\0')
             add_history(line);
 
-        /* 🔹 Later: send line to parser instead of debug lexer */
+        /* 🔹 Tester hook */
+        tokens = lexer(line);
+        cmds = parser(tokens, env);
+        print_cmds(cmds);
+        free_token(&tokens);
+        free_cmds(cmds);
 
         free(line);
     }
     return 0;
 }
-
-

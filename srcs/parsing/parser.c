@@ -5,63 +5,71 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/30 10:52:46 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/09/30 10:53:38 by aalbugar         ###   ########.fr       */
+/*   Created: 2025/09/24 13:34:44 by aalbugar          #+#    #+#             */
+/*   Updated: 2025/09/30 12:54:44 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int open_infile(char *filename)
+static int is_redir(int type)
 {
-    int fd;
+	return (type == TOK_REDIR_IN
+		|| type == TOK_REDIR_OUT || type == TOK_APPEND || type == TOK_HEREDOC);
+}
+// Add a command node to the end of the list.
+void add_cmd_back(t_cmd **lst, t_cmd *new)
+{
+	t_cmd *tmp;
 
-    fd = open(filename, O_RDONLY);
-    if (fd == -1)
-        perror(filename);
-    return (fd);
+	if (!new)
+		return;
+	if (!*lst)
+	{
+		*lst = new;
+		return;
+	}
+	tmp = *lst;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
 }
 
-static int open_outfile_trunc(char *filename)
+static void start_new_cmd(t_cmd **cmds, t_cmd **current)
 {
-    int fd;
-
-    fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (fd == -1)
-        perror(filename);
-    return (fd);
+	*current = new_cmd();
+	add_cmd_back(cmds, *current);
 }
 
-static int open_outfile_append(char *filename)
+static void process_token(t_cmd *current, t_token **tokens)
 {
-    int fd;
-
-    fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-    if (fd == -1)
-        perror(filename);
-    return (fd);
+	if ((*tokens)->type == TOK_PIPE)
+		start_new_cmd(NULL, &current); /* handled outside */
+	else if (is_redir((*tokens)->type))
+	{
+		parse_redir(current, *tokens);
+		*tokens = (*tokens)->next; /* skip filename */
+	}
+	else
+		pars_word(current, *tokens);
 }
 
-static void handle_heredoc(t_cmd *cmd, char *delimiter)
+/* ======================= MAIN PARSER ======================= */
+t_cmd *parser(t_token *tokens, char **envp)
 {
-    (void)cmd;
-    (void)delimiter;
-    /* 🔹 Placeholder for heredoc handling */
-}
+	t_cmd *cmds;
+	t_cmd *current;
 
-void parse_redir(t_cmd *cmd, t_token *tok)
-{
-    char *filename;
-
-    if (!tok->next || tok->next->type != TOK_CMD)
-        return ;
-    filename = tok->next->str;
-    if (tok->type == TOK_REDIR_IN)
-        cmd->infile = open_infile(filename);
-    else if (tok->type == TOK_REDIR_OUT)
-        cmd->outfile = open_outfile_trunc(filename);
-    else if (tok->type == TOK_APPEND)
-        cmd->outfile = open_outfile_append(filename);
-    else if (tok->type == TOK_HEREDOC)
-        handle_heredoc(cmd, filename);
+	(void)envp;
+	cmds = NULL;
+	start_new_cmd(&cmds, &current);
+	while (tokens)
+	{
+		if (tokens->type == TOK_PIPE)
+			start_new_cmd(&cmds, &current);
+		else
+			process_token(current, &tokens);
+		tokens = tokens->next;
+	}
+	return (cmds);
 }

@@ -84,9 +84,17 @@ char    *expand_value(char *word, char **envp, int last_exit);
 void    free_token(t_token **list);
 void    free_cmds(t_cmd *cmds);
 
-int     handle_heredoc(char *delimiter); // returns fd
+// int     handle_heredoc(char *delimiter);
 t_token *new_token(char *str, int type);
 void add_token_back(t_token **lst, t_token *new);
-void    print_tokens(t_token *lst);
+// void    print_tokens(t_token *lst);
+void parse_redir(t_cmd *cmd, t_token *tok);
+t_cmd *parser(t_token *tokens, char **envp);
+void	pars_word(t_cmd *cmd, t_token *tok);
+void add_cmd_back(t_cmd **lst, t_cmd *new);
+t_token *lexer(char *line);
+t_cmd *new_cmd(void);
+
+
 
 #endif
