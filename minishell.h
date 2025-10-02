@@ -29,13 +29,13 @@
 # define TOK_HEREDOC   6
 
 /* ===================== ERROR MACROS ===================== */
-# define ERR_MALLOC 1
+// # define ERR_MALLOC 1
 # define ERR_MALLOC "Memory allocation failed\n"
 
-# define ERR_PIPE 	1
+// # define ERR_PIPE 	1
 # define ERR_PIPE 	"Pipe creation failed\n"
 
-# define ERR_FORK 	1	
+// # define ERR_FORK 	1	
 # define ERR_FORK 	"Fork failed\n"	
 
 typedef struct s_token
@@ -108,7 +108,10 @@ t_cmd		*new_cmd(void);
 //list_token.c
 int			append_token(t_token **list, char *str, int type);
 void    	free_token(t_token **list);
-static void add_first(t_token **list, t_token *new);
-static int  token_new_element(t_token **new, char *str, int type);
+// static void add_first(t_token **list, t_token *new);
+// static int  token_new_element(t_token **new, char *str, int type);
+//? these are static functions wich means there are only ued within one .c scope 
+//?so adding them to the header is wrong its either the functons are not static
+//? and are allowed to be called outside the scope or are ststic and not added to the .h file
 
 #endif
