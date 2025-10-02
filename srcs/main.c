@@ -1,68 +1,42 @@
 #include "minishell.h"
 
-static void print_cmds(t_cmd *cmds)
-{
-    int i;
-
-    while (cmds)
-    {
-        printf("CMD:\n");
-        if (cmds->argv)
-        {
-            i = 0;
-            while (cmds->argv[i])
-            {
-                printf("  argv[%d] = %s\n", i, cmds->argv[i]);
-                i++;
-            }
-        }
-        printf("  infile  = %d\n", cmds->infile);
-        printf("  outfile = %d\n", cmds->outfile);
-        cmds = cmds->next;
-    }
-}
-
 int main(int argc, char **argv, char **env)
 {
     char            *line;
-    int             last_status = 0;       
+    int             last_status;       
     t_shell_state   state;       /* track $? locally */
-    t_token         *tokens;     /* for lexer */
-    t_cmd           *cmds;       /* for parser */
 
     (void)argc;
     (void)argv;
     (void)env;
 
-    state.active_child = 0;      /* initialize: 0 = at prompt */
+    state.active_child = 0;
+    last_status = 0;
     setup_parent_signals();
-    disable_echoctl();           /* install parent signal handlers */
+    disable_echoctl();
 
     while (1)
     {
         errno = 0;
-        line = readline("lolipop 🍭$ ");
-        if (line == NULL)
+        line = read_full_line();
+        if (!line)
         {
             if (errno == EINTR)   /* Ctrl-C at prompt */
             {
                 last_status = 130;
                 continue;
             }
-            return last_status;
+            return (last_status); /* Ctrl-D at main prompt exits */
         }
-
         if (*line != '\0')
             add_history(line);
 
-        /* 🔹 Tester hook */
-        tokens = lexer(line);
-        cmds = parser(tokens, env);
-        print_cmds(cmds);
-        free_token(&tokens);
-        free_cmds(cmds);
+        /* 🔹 Later: send line to lexer + parser */
+        // tokens = lexer(line);
+        // cmds = parser(tokens, env);
+        // execute(cmds, &state);
 
         free(line);
     }
-    return 0;
+    return (0);
 }

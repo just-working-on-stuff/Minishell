@@ -6,7 +6,7 @@
 /*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 16:09:37 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/09/24 13:06:46 by aalbugar         ###   ########.fr       */
+/*   Updated: 2025/10/02 17:46:10 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,40 +48,46 @@ static int handle_redir_out(t_token **head, char *line, int i)
     add_token_back(head, new_token(ft_strdup(">"), TOK_REDIR_OUT));
     return (i + 1);
 }
-static int handle_word(t_token **head, char *line, int i)
+int	handle_word_with_error(t_token **head, char *line, int i)
 {
-    int start;
-
-    start = i;
-    while (line[i] && line[i] != ' ' && line[i] != '\t'
-        && line[i] != '|' && line[i] != '<' && line[i] != '>')
-        i++;
-    add_token_back(head,
-        new_token(ft_substr(line, start, i - start), TOK_CMD));
-    return (i);
+	i = handle_word(head, line, i);
+	if (i == -1)
+	{
+		free_token(head);
+		ft_putstr_fd("minishell: memory allocation failed\n", 2);
+		return (-1);
+	}
+	return (i);
 }
-t_token *lexer(char *line)
+
+
+t_token	*lexer(char *line)
 {
-    t_token *head;
-    int     i;
+	t_token	*head;
+	int		i;
 
-    head = NULL;
-    i = 0;
-    while (line[i])
-    {
-        if (line[i] == ' ' || line[i] == '\t')
-            i++;
-        else if (line[i] == '|')
-            i = handle_pipe(&head, line, i);
-        else if (line[i] == '<')
-            i = handle_redir_in(&head, line, i);
-        else if (line[i] == '>')
-            i = handle_redir_out(&head, line, i);
-        else
-            i = handle_word(&head, line, i);
-    }
-    return (head);
+	head = NULL;
+	i = 0;
+	while (line[i])
+	{
+		if (line[i] == ' ' || line[i] == '\t')
+			i++;
+		else if (line[i] == '|')
+			i = handle_pipe(&head, line, i);
+		else if (line[i] == '<')
+			i = handle_redir_in(&head, line, i);
+		else if (line[i] == '>')
+			i = handle_redir_out(&head, line, i);
+		else
+		{
+			i = handle_word_with_error(&head, line, i);
+			if (i == -1)
+				return (NULL);
+		}
+	}
+	return (head);
 }
+
 //? The lexer = “sentence cutter”.
 
 //? It breaks a raw input string into meaningful pieces (tokens).

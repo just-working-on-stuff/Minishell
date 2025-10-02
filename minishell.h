@@ -107,7 +107,12 @@ t_cmd		*new_cmd(void);
 
 //list_token.c
 int			append_token(t_token **list, char *str, int type);
-void    	free_token(t_token **list);
+void		free_token(t_token **list);
+char	*read_full_line(void);
+int	has_unclosed_quote(const char *line);
+int get_quoted_str(char *line, int i, char **out);
+int	handle_word(t_token **head, char *line, int i);
+
 // static void add_first(t_token **list, t_token *new);
 // static int  token_new_element(t_token **new, char *str, int type);
 //? these are static functions wich means there are only ued within one .c scope 
