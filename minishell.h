@@ -112,6 +112,8 @@ char	*read_full_line(void);
 int	has_unclosed_quote(const char *line);
 int get_quoted_str(char *line, int i, char **out);
 int	handle_word(t_token **head, char *line, int i);
+char *expand_value(char *word, char **envp, int last_exit);
+
 
 // static void add_first(t_token **list, t_token *new);
 // static int  token_new_element(t_token **new, char *str, int type);

@@ -6,7 +6,7 @@
 /*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 16:51:21 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/10/02 17:41:36 by aalbugar         ###   ########.fr       */
+/*   Updated: 2025/10/07 14:12:03 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,10 @@ int	append_part(char **word, char *part)
 	tmp = ft_strjoin(*word, part);
 	free(*word);
 	free(part);
+	if (!tmp)
+		return (-1);
 	*word = tmp;
-	return (*word ? 0 : -1);
+	return (0);
 }
 int	handle_word(t_token **head, char *line, int i)
 {

@@ -17,6 +17,7 @@ SRCS := srcs/main.c \
 		srcs/parsing/cmd_fd.c\
 		srcs/parsing/lexer_quotes.c\
 		srcs/parsing/readline_utils.c\
+		srcs/parsing/expander.c\
 
 OBJS := $(SRCS:.c=.o)
 
