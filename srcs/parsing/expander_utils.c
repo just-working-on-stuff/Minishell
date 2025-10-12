@@ -6,7 +6,7 @@
 /*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 14:23:43 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/10/07 14:44:27 by aalbugar         ###   ########.fr       */
+/*   Updated: 2025/10/12 16:23:29 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,20 +29,56 @@ char *find_env_value(char *key, char **envp)
 	}
 	return (NULL);
 }
-
 char	*extract_var_name(char *str, int start)
 {
 	int		i;
 	int		len;
 
-	i = start + 1; // skip the '$'
+	i = start + 1;
 	if (str[i] == '?')
 		return (ft_strdup("?"));
 	if (!ft_isalpha(str[i]) && str[i] != '_')
-		return (ft_strdup("")); // invalid var name like $1, $!, $-, just skip
-
+		return (ft_strdup("")); // invalid start like $1, $-
+	i++;
 	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
 		i++;
 	len = i - (start + 1);
 	return (ft_substr(str, start + 1, len));
+}
+
+char	*expand_tilde(char *word, char **envp)
+{
+	char	*home;
+	char	*expanded;
+	int		i;
+
+	if (!word)
+		return (NULL);
+	i = 0;
+	while (word[i])
+	{
+		if (word[i] == '~'
+			&& (i == 0 || word[i - 1] == '=')
+			&& (!word[i + 1] || word[i + 1] == '/'))
+		{
+			home = find_env_value("HOME", envp);
+			if (!home)
+				return (ft_strdup(word));
+			expanded = ft_strjoin(home, word + i + 1);
+			if (i == 0)
+				return (expanded);
+			return (ft_strjoin_free(ft_substr(word, 0, i + 1), expanded));
+		}
+		i++;
+	}
+	return (ft_strdup(word));
+}
+
+char	*ft_strjoin_free(char *s1, char *s2)
+{
+	char	*joined;
+
+	joined = ft_strjoin(s1, s2);
+	free(s1);
+	return (joined);
 }

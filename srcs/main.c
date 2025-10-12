@@ -3,6 +3,7 @@
 int main(int argc, char **argv, char **env)
 {
     char            *line;
+    char            *expanded;
     int             last_status;       
     t_shell_state   state;       /* track $? locally */
 
@@ -11,7 +12,7 @@ int main(int argc, char **argv, char **env)
     (void)env;
 
     state.active_child = 0;
-    last_status = 0;
+    last_status = 42; // simulate last exit code
     setup_parent_signals();
     disable_echoctl();
 
@@ -30,6 +31,14 @@ int main(int argc, char **argv, char **env)
         }
         if (*line != '\0')
             add_history(line);
+
+        /* 🔹 Test expander */
+        expanded = expand_value(line, env, last_status);
+        if (expanded)
+        {
+            printf("Expanded: [%s]\n", expanded);
+            free(expanded);
+        }
 
         /* 🔹 Later: send line to lexer + parser */
         // tokens = lexer(line);

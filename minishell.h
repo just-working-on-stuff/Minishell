@@ -113,6 +113,12 @@ int	has_unclosed_quote(const char *line);
 int get_quoted_str(char *line, int i, char **out);
 int	handle_word(t_token **head, char *line, int i);
 char *expand_value(char *word, char **envp, int last_exit);
+int	append_part(char **word, char *part);
+char	*extract_var_name(char *str, int start);
+char *find_env_value(char *key, char **envp);
+char	*expand_tilde(char *word, char **envp);
+char	*ft_strjoin_free(char *s1, char *s2);
+
 
 
 // static void add_first(t_token **list, t_token *new);
