@@ -122,7 +122,9 @@ int	main(int argc, char **argv, char **env)
 			}
 			else if (ft_strcmp(expanded, "pwd") == 0)
 				ft_pwd();
-
+			/* Add this block */
+			else if (ft_strcmp(expanded, "env") == 0)
+				ft_env(env);
 			/* ✅ NEW: EXIT BLOCK (handles exit + args) */
 			else if (ft_strncmp(expanded, "exit", 4) == 0)
 			{
