@@ -3,15 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 12:54:41 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/09/30 18:26:00 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/10/13 12:05:29 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*
+this is a simple implementation of the echo command
+its main point is to handle the -n flag and print the arguments separated by spaces 
+*/
 int	ft_echo(char **args)
 {
 	int	i;			

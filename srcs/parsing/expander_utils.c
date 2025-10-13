@@ -6,7 +6,7 @@
 /*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 14:23:43 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/10/12 16:23:29 by aalbugar         ###   ########.fr       */
+/*   Updated: 2025/10/13 12:02:54 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,9 @@ char	*expand_tilde(char *word, char **envp)
 	}
 	return (ft_strdup(word));
 }
-
+/*
+this function joins two strings and frees the first one.
+*/
 char	*ft_strjoin_free(char *s1, char *s2)
 {
 	char	*joined;

@@ -118,8 +118,10 @@ char	*extract_var_name(char *str, int start);
 char *find_env_value(char *key, char **envp);
 char	*expand_tilde(char *word, char **envp);
 char	*ft_strjoin_free(char *s1, char *s2);
-
-
+int	exec_exit(char **argv, t_shell_state *state);
+int	ft_echo(char **args);
+int	ft_pwd(void);
+int	ft_strcmp(const char *s1, const char *s2);
 
 // static void add_first(t_token **list, t_token *new);
 // static int  token_new_element(t_token **new, char *str, int type);
