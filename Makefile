@@ -19,7 +19,9 @@ SRCS := srcs/main.c \
 		srcs/parsing/readline_utils.c\
 		srcs/parsing/expander.c\
 		srcs/parsing/expander_utils.c\
-
+		srcs/builtins/echo.c \
+		srcs/builtins/pwd.c \
+		srcs/builtins/exit.c \
 
 OBJS := $(SRCS:.c=.o)
 

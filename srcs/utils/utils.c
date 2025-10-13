@@ -6,7 +6,7 @@
 /*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:46:20 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/09/23 11:41:27 by aalbugar         ###   ########.fr       */
+/*   Updated: 2025/10/13 16:41:00 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,4 +25,13 @@ void    disable_echoctl(void)
 #endif
 
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &t);
+}
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	size_t	i;
+
+	i = 0;
+	while (s1[i] && s2[i] && s1[i] == s2[i])
+		i++;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
