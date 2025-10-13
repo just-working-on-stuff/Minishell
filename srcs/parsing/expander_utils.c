@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 14:23:43 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/10/12 16:23:29 by aalbugar         ###   ########.fr       */
+/*   Updated: 2025/10/13 17:06:16 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ char *find_env_value(char *key, char **envp)
 	}
 	return (NULL);
 }
+
 char	*extract_var_name(char *str, int start)
 {
 	int		i;
