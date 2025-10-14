@@ -124,6 +124,12 @@ int	ft_strcmp(const char *s1, const char *s2);
 int	ft_echo(char **args);
 int	ft_pwd(void);
 int ft_env(char **envp);
+int	exec_unset(char **argv, t_shell_state *state);
+void	remove_env_entry(char ***env, int remove_i);
+int	find_env_index(char **env, char *name);
+int	count_env_vars(char **env);
+int	is_valid_env_var_name(char *name);
+
 // static void add_first(t_token **list, t_token *new);
 // static int  token_new_element(t_token **new, char *str, int type);
 //? these are static functions wich means there are only ued within one .c scope 

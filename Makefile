@@ -23,6 +23,8 @@ SRCS := srcs/main.c \
 		srcs/builtins/pwd.c \
 		srcs/builtins/exit.c \
 		srcs/builtins/env.c \
+		srcs/builtins/unset.c \
+		srcs/builtins/builtins_utils.c \
 
 OBJS := $(SRCS:.c=.o)
 

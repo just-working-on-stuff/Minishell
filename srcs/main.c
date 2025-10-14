@@ -52,13 +52,12 @@
 
 #include "minishell.h"
 
-
-int	main(int argc, char **argv, char **env)
+int main(int argc, char **argv, char **env)
 {
-	char			*line;
-	char			*expanded;
-	int				last_status;
-	t_shell_state	state; /* track $? locally */
+	char *line;
+	char *expanded;
+	int last_status;
+	t_shell_state state; /* track $? locally */
 
 	(void)argc;
 	(void)argv;
@@ -92,9 +91,9 @@ int	main(int argc, char **argv, char **env)
 			/* ======== BUILTINS HANDLER ======== */
 			if (ft_strncmp(expanded, "echo", 4) == 0)
 			{
-				char	*args[100];
-				char	*token;
-				int		i = 0;
+				char *args[100];
+				char *token;
+				int i = 0;
 
 				args[i++] = "echo";
 				token = expanded + 4;
@@ -122,22 +121,56 @@ int	main(int argc, char **argv, char **env)
 			}
 			else if (ft_strcmp(expanded, "pwd") == 0)
 				ft_pwd();
-			/* Add this block */
+
 			else if (ft_strcmp(expanded, "env") == 0)
 				ft_env(env);
-			/* ✅ NEW: EXIT BLOCK (handles exit + args) */
+
+			/* ✅ NEW: UNSET BLOCK (handles unset + args) */
+			else if (ft_strncmp(expanded, "unset", 5) == 0)
+			{
+				char *args[100];
+				char *token;
+				int i = 0;
+
+				args[i++] = "unset";
+				token = expanded + 5;
+
+				// Skip leading spaces
+				while (*token && *token == ' ')
+					token++;
+
+				// Split arguments by spaces
+				while (*token)
+				{
+					args[i++] = token;
+					while (*token && *token != ' ')
+						token++;
+					if (*token)
+					{
+						*token = '\0';
+						token++;
+						while (*token && *token == ' ')
+							token++;
+					}
+				}
+				args[i] = NULL;
+				exec_unset(args, &state);
+			}
+			/* ================================== */
+
+			/* ✅ EXIT BLOCK (handles exit + args) */
 			else if (ft_strncmp(expanded, "exit", 4) == 0)
 			{
-				char	*arg_start;
-				char	*args[10];
-				int		i;
+				char *arg_start;
+				char *args[10];
+				int i;
 
 				arg_start = expanded + 4;
 				while (*arg_start == ' ')
 					arg_start++;
 				i = 0;
 				args[i++] = "exit";
-				if (*arg_start) // if there's anything after 'exit'
+				if (*arg_start)
 				{
 					char *token = ft_strdup(arg_start);
 					args[i++] = token;

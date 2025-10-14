@@ -6,32 +6,34 @@
 /*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 17:33:37 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/10/06 12:14:48 by aalbugar         ###   ########.fr       */
+/*   Updated: 2025/10/14 12:45:27 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*read_full_line(void)
+char *read_full_line(void)
 {
-	char	*line;
-	char	*next;
-	char	*tmp;
+	char *line;
+	char *next;
+	char *tmp;
 
 	line = readline("lolipop 🍭$ ");
 	if (!line)
-		return (NULL); // Ctrl-D at main prompt
-
+	{
+		ft_putendl_fd("exit", 1);
+		return (NULL);
+	}
 	while (has_unclosed_quote(line))
 	{
 		next = readline("> ");
-		if (!next) // Ctrl-D during continuation
+		if (!next)
 		{
-			ft_putstr_fd("lolipop 🍭$ : unexpected EOF while looking for matching quote\n", 2);
+			ft_putstr_fd("lolipop 🍭$ : unexpected EOF\n", 2);
 			free(line);
 			return (NULL);
 		}
-		tmp = ft_strjoin(line, "\n"); // append next line
+		tmp = ft_strjoin(line, "\n");
 		free(line);
 		line = ft_strjoin(tmp, next);
 		free(tmp);
@@ -39,3 +41,4 @@ char	*read_full_line(void)
 	}
 	return (line);
 }
+// This function reads a full line from the user, handling multi-line input if there are unclosed quotes.
