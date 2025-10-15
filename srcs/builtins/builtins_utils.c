@@ -6,7 +6,7 @@
 /*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 13:38:03 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/10/14 13:51:59 by aalbugar         ###   ########.fr       */
+/*   Updated: 2025/10/14 17:28:01 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,4 +90,22 @@ void	remove_env_entry(char ***env, int remove_i)
 	new_env[count - 1] = NULL;
 	free(*env);
 	*env = new_env;
+}
+char **ft_strdup_array(char **env)
+{
+	int     i, count;
+    char  **copy;
+
+    count = count_env_vars(env);
+    copy = malloc(sizeof(char *) * (count + 1));
+    if (!copy)
+        return (NULL);
+    i = 0;
+    while (env[i])
+    {
+        copy[i] = ft_strdup(env[i]);
+        i++;
+    }
+    copy[i] = NULL;
+    return (copy);
 }

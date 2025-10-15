@@ -129,6 +129,7 @@ void	remove_env_entry(char ***env, int remove_i);
 int	find_env_index(char **env, char *name);
 int	count_env_vars(char **env);
 int	is_valid_env_var_name(char *name);
+char **ft_strdup_array(char **env);
 
 // static void add_first(t_token **list, t_token *new);
 // static int  token_new_element(t_token **new, char *str, int type);

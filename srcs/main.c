@@ -65,6 +65,7 @@ int main(int argc, char **argv, char **env)
 
 	state.active_child = 0;
 	last_status = 42; // simulate last exit code
+	state.env = ft_strdup_array(env);
 	setup_parent_signals();
 	disable_echoctl();
 
@@ -85,7 +86,7 @@ int main(int argc, char **argv, char **env)
 			add_history(line);
 
 		/* 🔹 Test expander */
-		expanded = expand_value(line, env, last_status);
+		expanded = expand_value(line, state.env, last_status);
 		if (expanded)
 		{
 			/* ======== BUILTINS HANDLER ======== */
@@ -123,7 +124,7 @@ int main(int argc, char **argv, char **env)
 				ft_pwd();
 
 			else if (ft_strcmp(expanded, "env") == 0)
-				ft_env(env);
+				ft_env(state.env);
 
 			/* ✅ NEW: UNSET BLOCK (handles unset + args) */
 			else if (ft_strncmp(expanded, "unset", 5) == 0)
@@ -134,27 +135,25 @@ int main(int argc, char **argv, char **env)
 
 				args[i++] = "unset";
 				token = expanded + 5;
-
 				// Skip leading spaces
 				while (*token && *token == ' ')
 					token++;
-
 				// Split arguments by spaces
 				while (*token)
 				{
-					args[i++] = token;
+					args[i] = token; // Store the start of the argument
 					while (*token && *token != ' ')
 						token++;
 					if (*token)
 					{
-						*token = '\0';
-						token++;
+						*token++ = '\0'; // Null terminate and move to next char
 						while (*token && *token == ' ')
 							token++;
 					}
+					i++;
 				}
 				args[i] = NULL;
-				exec_unset(args, &state);
+				exec_unset(args, &state); // Pass state to maintain environment
 			}
 			/* ================================== */
 
