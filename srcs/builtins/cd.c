@@ -6,81 +6,128 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 17:07:42 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/10/15 16:56:48 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/10/19 15:15:28 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int ft_cd(char **args)
+static int handle_cd_path(char *path)
 {
-    char old_pwd[PATH_MAX];
-    char new_pwd[PATH_MAX];
+    if (chdir(path) == -1)
+    {
+        ft_putstr_fd("cd: ", 2);
+        ft_putstr_fd(path, 2);
+        ft_putstr_fd(": ", 2);
+        perror("");
+        return (1);
+    }
+    return (0);
+}
+/*
+this function creates a new environment variable string in the format "KEY=VALUE".
+*/
+static char *create_env_var(const char *key, const char *value)
+{
+    char    *new_var;
+    size_t  key_len;
 
-    // Store current directory before changing
+    key_len = ft_strlen(key);
+    new_var = malloc(key_len + ft_strlen(value) + 2);
+    if (!new_var)
+        return (NULL);
+    ft_strlcpy(new_var, key, key_len + 1);
+    new_var[key_len] = '=';
+    ft_strlcpy(new_var + key_len + 1, value, ft_strlen(value) + 1);
+    return (new_var);
+}
+/*
+this function adds a new environment variable to the envp array.
+*/
+
+static int add_new_env(char ***envp, char *new_var)
+{
+    char    **new_envp;
+    int     i;
+
+    i = 0;
+    while ((*envp)[i])
+        i++;
+    new_envp = malloc(sizeof(char *) * (i + 2));
+    if (!new_envp)
+        return (1);
+    i = 0;
+    while ((*envp)[i])
+    {
+        new_envp[i] = (*envp)[i];
+        i++;
+    }
+    new_envp[i] = new_var;
+    new_envp[i + 1] = NULL;
+    free(*envp);
+    *envp = new_envp;
+    return (0);
+}
+/*
+this function updates or adds an environment variable in the envp array.
+*/
+
+int update_env(char ***envp, const char *key, const char *value)
+{
+    int     i;
+    char    *new_var;
+    size_t  key_len;
+
+    if (!envp || !*envp || !key || !value)
+        return (1);
+    key_len = ft_strlen(key);
+    i = 0;
+    while ((*envp)[i])
+    {
+        if (!ft_strncmp((*envp)[i], key, key_len)
+			&& (*envp)[i][key_len] == '=')
+        {
+            if (!(new_var = create_env_var(key, value)))
+                return (1);
+            free((*envp)[i]);
+            (*envp)[i] = new_var;
+            return (0);
+        }
+        i++;
+    }
+    if (!(new_var = create_env_var(key, value)))
+        return (1);
+    return (add_new_env(envp, new_var));
+}
+
+/*
+this function implements the cd command, changing the current directory and updating PWD and OLDPWD.
+*/
+
+int ft_cd(char **args, char ***envp)
+{
+    char    old_pwd[PATH_MAX];
+    char    new_pwd[PATH_MAX];
+
     if (!getcwd(old_pwd, PATH_MAX))
     {
         perror("cd: getcwd");
         return (1);
     }
-
-    // Handle no arguments (cd to HOME)
     if (!args[1])
     {
         char *home = getenv("HOME");
-        if (!home)
-        {
-            ft_putstr_fd("cd: HOME not set\n", 2);
+        if (!home || handle_cd_path(home))
             return (1);
-        }
-        if (chdir(home) == -1)
-        {
-            perror("cd");
-            return (1); //more clarification, so cd why? 
-        }
     }
-    // Handle cd with path argument
-    else if (chdir(args[1]) == -1)
-    {
-        ft_putstr_fd("cd: ", 2);
-        ft_putstr_fd(args[1], 2);
-        ft_putstr_fd(": ", 2);
-        perror("");
+    else if (handle_cd_path(args[1]))
         return (1);
-    }
-     /*
-this else if conditional checks if the chdir function fails when trying to change the directory to the path specified in args[1].
-If chdir returns -1, it indicates an error occurred (like the directory doesn't exist or permission is denied).
-In that case, it prints an error message to standard error (file descriptor 2) that includes "cd: ", the problematic path, and the specific error message from perror.
-for example, writing cd: /nonexistent: No such file or directory     
-    */
-
-    // Get new working directory after change
     if (!getcwd(new_pwd, PATH_MAX))
-    {
-        perror("cd: getcwd");
         return (1);
-    }
-/*
-to test this in the actual bash,
-for the if (!getcwd(new_pwd, PATH_MAX)) part,
-type cd /nonexistent_directory in bash and it should
-print an error message like "cd: /nonexistent_directory: No such file or directory"
-why perror("cd: getcwd")? because getcwd failed to get the current working directory
-its not printed because getcwd is not called if chdir fails
-*/
-    // Update PWD and OLDPWD environment variables
-    // Note: You'll need to implement update_env() function
-    update_env("OLDPWD", old_pwd);
-    update_env("PWD", new_pwd);
-
-    return (0);
+    return (update_env(envp, "OLDPWD", old_pwd) || 
+            update_env(envp, "PWD", new_pwd));
 }
 
-/* 
-this function implements cd in bash, it changes the current working directory
-and keeps the pwd and oldpwd environment variables updated so that it knows where it is in
-the system
+/*
+this function handles the 'cd' command, changing the current directory and updating the PWD and OLDPWD environment variables accordingly.
 */
-
-

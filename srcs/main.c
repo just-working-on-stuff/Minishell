@@ -184,7 +184,38 @@ int main(int argc, char **argv, char **env)
 				}
 			}
 			/* ================================== */
+            /* ✅ CD BLOCK (handles cd + args) */
+            else if (ft_strncmp(expanded, "cd", 2) == 0)
+            {
+                char *args[100];
+                char *token;
+                int i = 0;
 
+                args[i++] = "cd";
+                token = expanded + 2;
+                while (*token && *token == ' ')
+                    token++;
+                if (*token)
+                {
+                    args[i++] = token;
+                    while (*token)
+                    {
+                        if (*token == ' ')
+                        {
+                            *token = '\0';
+                            token++;
+                            while (*token && *token == ' ')
+                                token++;
+                            if (*token)
+                                args[i++] = token;
+                        }
+                        token++;
+                    }
+                }
+                args[i] = NULL;
+                ft_cd(args, &state.env);
+            }
+            /* ================================== */
 			else
 				printf("Expanded: [%s]\n", expanded);
 

@@ -131,6 +131,14 @@ int	count_env_vars(char **env);
 int	is_valid_env_var_name(char *name);
 char **ft_strdup_array(char **env);
 
+//cd shit
+int ft_cd(char **args, char ***envp);
+// static int handle_cd_path(char *path);
+// static char *create_env_var(const char *key, const char *value);
+// static int add_new_env(char ***envp, char *new_var);
+int update_env(char ***envp, const char *key, const char *value);
+
+
 // static void add_first(t_token **list, t_token *new);
 // static int  token_new_element(t_token **new, char *str, int type);
 //? these are static functions wich means there are only ued within one .c scope 
