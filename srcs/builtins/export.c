@@ -6,10 +6,10 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 19:25:26 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/10/15 13:11:28 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/10/20 15:26:45 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int ft_export();
+int	ft_export

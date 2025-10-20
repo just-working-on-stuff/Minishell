@@ -61,21 +61,21 @@ typedef struct s_list
 	struct s_list	*next;
 }	t_list;
 
-
-
 typedef struct s_cmd
 {
 	char	**argv; // array of args /0
 	int		infile; // fd for input (default = STDIN_FILENO)
 	int		outfile;// fd for output (default = STDOUT_FILENO)
 	struct s_cmd	*next; // next command (after pipe)
-}t_cmd;
+}	t_cmd;
 
-typedef struct s_data
+typedef struct s_env
 {
-	//fil this up
-}	t_data;
-
+	char	*key;
+	char	*value;
+	int		exported;
+	struct s_env	*next;
+} t_env;
 
 
 /*================signals===============*/
