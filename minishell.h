@@ -13,6 +13,7 @@
 # include <unistd.h>
 # include <signal.h>
 # include <errno.h>
+# include <stdbool.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <readline/readline.h>
@@ -49,7 +50,7 @@ typedef struct s_token
 typedef struct s_shell_state
 {
 	int last_status;
-	char **env;
+	char **env; // maybe change to char **env later
 	t_token 	*token;
 	pid_t	 active_child;
 }	t_shell_state;
@@ -69,13 +70,52 @@ typedef struct s_cmd
 	struct s_cmd	*next; // next command (after pipe)
 }	t_cmd;
 
+// typedef struct s_env
+// {
+// 	char	*key;
+// 	char	*value;
+// 	int		exported;
+// 	struct s_env	*next;
+// } t_env;
+
+// Add these to your existing minishell.h
+/*=================== ENV LINKED LIST ==================*/
 typedef struct s_env
 {
-	char	*key;
-	char	*value;
-	int		exported;
+	char			*key;
+	char			*value;
+	int				exported;
 	struct s_env	*next;
-} t_env;
+}	t_env;
+
+/*=================== EXPORT FUNCTIONS =================*/
+// Export builtin
+int		ft_export(char **args, t_env **env_list);
+int		process_export_arg(char *arg, t_env **env_list);
+void	sort_env_list(t_env *head);
+
+// Export utilities
+bool	validate_export(char *str);
+void	print_export(t_env *env_list, int fd);
+int		sort_print(t_env *env_list, int fd);
+t_env	*env_dup_list(t_env *head);
+
+// Environment list management
+t_env	*env_new_node(char *key, char *value);
+void	env_add_back(t_env **head, t_env *new_node);
+void	env_clear_list(t_env **head);
+t_env	*env_find_node(t_env *head, char *key);
+void	env_update_node(t_env *node, char *value);
+char	*extract_key(char *str);
+char	*extract_value(char *str);
+
+//env conversion
+t_env	*env_array_to_list(char **env_array);
+char	**env_list_to_array(t_env *env_list);
+void	free_env_list(t_env *env_list);
+
+//handlebuiltins
+int	handle_builtins(char *expanded, t_shell_state *state);
 
 
 /*================signals===============*/
@@ -133,11 +173,9 @@ char **ft_strdup_array(char **env);
 
 //cd shit
 int ft_cd(char **args, char ***envp);
-// static int handle_cd_path(char *path);
-// static char *create_env_var(const char *key, const char *value);
-// static int add_new_env(char ***envp, char *new_var);
 int update_env(char ***envp, const char *key, const char *value);
 
+int ft_export(char **args, t_env **env_list);
 
 // static void add_first(t_token **list, t_token *new);
 // static int  token_new_element(t_token **new, char *str, int type);
