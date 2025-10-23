@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list_token.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 11:36:17 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/09/23 11:36:21 by aalbugar         ###   ########.fr       */
+/*   Updated: 2025/10/23 10:58:58 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,3 +84,8 @@ void    free_token(t_token **list)
 }
 //Free the entire circular token list, including each token string.
 //Resets list pointer to NULL to avoid dangling reference. 
+
+// void    free_everything(t_token **list, char **args)
+// {
+    
+// }

@@ -6,7 +6,7 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 14:08:52 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/10/22 14:35:35 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/10/23 12:42:48 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,26 @@ int	sort_print(t_env *env_list, int fd)
 	return (0);
 }
 
+
 int	process_export_arg(char *arg, t_env **env_list)
 {
 	char	*key;
 	char	*value;
+	char	*equal_pos;
 	t_env	*existing;
 
-	key = extract_key(arg);
-	value = extract_value(arg);
+	equal_pos = ft_strchr(arg, '=');
+	if (equal_pos)
+	{
+		key = extract_key(arg);
+		value = extract_value(arg);
+	}
+	else
+	{
+		key = ft_strdup(arg);
+		value = NULL;
+	}
+	
 	if (!key)
 		return (1);
 	existing = env_find_node(*env_list, key);
@@ -86,24 +98,22 @@ int	process_export_arg(char *arg, t_env **env_list)
 int	ft_export(char **args, t_env **env_list)
 {
 	int	i;
-	int	fd;
 	int	status;
 
-	fd = 1;
 	if (args[1] == NULL)
-		return (sort_print(*env_list, fd));
+		return (sort_print(*env_list, 1));
 	i = 1;
 	status = 0;
 	while (args[i])
 	{
 		if (!validate_export(args[i]))
 		{
-			ft_putstr_fd("export: invalid variable name\n", 2);
+			print_export_error(args[i]);
 			status = 1;
 		}
 		else if (process_export_arg(args[i], env_list) != 0)
 		{
-			ft_putstr_fd("export: memory allocation failed\n", 2);
+			print_export_alloc_error();
 			status = 1;
 		}
 		i++;

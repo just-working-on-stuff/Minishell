@@ -5,9 +5,9 @@ CFLAGS      := -Wall -Wextra -Werror
 
 # --- Sources / Objects ---
 SRCS := srcs/main.c \
-		srcs/builtins_handler.c \
         srcs/utils/list_token.c \
 		srcs/utils/utils.c \
+		srcs/utils/utils_array.c \
         srcs/utils/signals.c \
         srcs/utils/signals2.c\
 		srcs/exec/run_simple.c\
@@ -26,11 +26,16 @@ SRCS := srcs/main.c \
 		srcs/builtins/env.c \
 		srcs/builtins/unset.c \
 		srcs/builtins/cd.c \
+		srcs/builtins/cd_utils.c \
+		srcs/builtins/args_parse.c \
 		srcs/builtins/export/export_utils.c \
 		srcs/builtins/export/export_utils2.c \
 		srcs/builtins/export/export.c \
+		srcs/builtins/export/export_utils3.c \
+		srcs/builtins/export/export_errors.c \
 		srcs/builtins/export/env_conversion.c \
 		srcs/builtins/builtins_utils.c \
+		srcs/exec/builtins_launcher.c \
 
 OBJS := $(SRCS:.c=.o)
 

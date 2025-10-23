@@ -118,6 +118,23 @@ void	free_env_list(t_env *env_list);
 int	handle_builtins(char *expanded, t_shell_state *state);
 
 
+/*=================== CD =================*/
+char	*get_home_from_env(char **envp);
+int		handle_cd_home(char **envp);
+int		handle_cd_prev(void);
+void	update_last_dir(char *path);
+
+/*=================== EXPORT =================*/
+void	print_export_error(char *arg);
+void	print_export_alloc_error(void);
+void	parse_export_args(char *expanded, char **args);
+
+/*=================== UTILS =================*/
+void	free_str_array(char **array);
+char	**dup_str_array(char **array);
+void	skip_spaces(char **str);
+char	*extract_arg(char *start, char *end);
+
 /*================signals===============*/
 
 void	setup_parent_signals(void);
@@ -174,7 +191,7 @@ char **ft_strdup_array(char **env);
 //cd shit
 int ft_cd(char **args, char ***envp);
 int update_env(char ***envp, const char *key, const char *value);
-
+int handle_cd_path(char *path);
 int ft_export(char **args, t_env **env_list);
 
 // static void add_first(t_token **list, t_token *new);

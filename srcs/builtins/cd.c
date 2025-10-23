@@ -6,13 +6,13 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 17:07:42 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/10/20 14:45:37 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/10/23 12:26:32 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int handle_cd_path(char *path)
+int handle_cd_path(char *path)
 {
     if (chdir(path) == -1)
     {
@@ -106,36 +106,35 @@ int update_env(char ***envp, const char *key, const char *value)
 this function implements the cd command, changing the current directory and updating PWD and OLDPWD.
 */
 
-int ft_cd(char **args, char ***envp)
+#include "minishell.h"
+
+int	ft_cd(char **args, char ***envp)
 {
-    char    old_pwd[PATH_MAX];
-    char    new_pwd[PATH_MAX];
+	char	old_pwd[PATH_MAX];
+	char	new_pwd[PATH_MAX];
 
-    if (!getcwd(old_pwd, PATH_MAX))
-    {
-        perror("cd: getcwd");
-        return (1);
-    }
-    if (!args[1])
-    {
-        char *home = getenv("HOME");
-        if (!home || handle_cd_path(home))
-            return (1);
-    }
-    else if (handle_cd_path(args[1]))
-        return (1);
-        /*
-        returning (1) indicates an error occurred while changing the directory.
-        */
-    if (!getcwd(new_pwd, PATH_MAX))
-        return (1);
-    return (update_env(envp, "OLDPWD", old_pwd) || 
-            update_env(envp, "PWD", new_pwd));
+	if (!getcwd(old_pwd, PATH_MAX))
+		return (perror("cd: getcwd"), 1);
+	if (!args[1] || ft_strcmp(args[1], "~") == 0)
+	{
+		if (handle_cd_home(*envp))
+			return (1);
+	}
+	else if (ft_strcmp(args[1], "-") == 0)
+	{
+		if (handle_cd_prev())
+			return (1);
+	}
+	else if (handle_cd_path(args[1]))
+		return (1);
+	if (!getcwd(new_pwd, PATH_MAX))
+		return (1);
+	update_last_dir(old_pwd);
+	return (update_env(envp, "OLDPWD", old_pwd)
+		|| update_env(envp, "PWD", new_pwd));
 }
-
-/*
-this function handles the 'cd' command, changing the current directory and updating the PWD and OLDPWD environment variables accordingly.
-*/
+// this function handles the 'cd' command, changing the current directory and updating the PWD and OLDPWD environment variables accordingly.
+// */
 
 
 /*
