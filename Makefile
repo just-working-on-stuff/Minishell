@@ -28,12 +28,7 @@ SRCS := srcs/main.c \
 		srcs/builtins/cd.c \
 		srcs/builtins/cd_utils.c \
 		srcs/builtins/args_parse.c \
-		srcs/builtins/export/export_utils.c \
-		srcs/builtins/export/export_utils2.c \
 		srcs/builtins/export/export.c \
-		srcs/builtins/export/export_utils3.c \
-		srcs/builtins/export/export_errors.c \
-		srcs/builtins/export/env_conversion.c \
 		srcs/builtins/builtins_utils.c \
 		srcs/exec/builtins_launcher.c \
 

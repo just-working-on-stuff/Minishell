@@ -50,7 +50,7 @@ typedef struct s_token
 typedef struct s_shell_state
 {
 	int last_status;
-	char **env; // maybe change to char **env later
+	t_list	*env_list; // maybe change to char **env later
 	t_token 	*token;
 	pid_t	 active_child;
 }	t_shell_state;
@@ -70,13 +70,15 @@ typedef struct s_cmd
 	struct s_cmd	*next; // next command (after pipe)
 }	t_cmd;
 
-// typedef struct s_env
-// {
-// 	char	*key;
-// 	char	*value;
-// 	int		exported;
-// 	struct s_env	*next;
-// } t_env;
+
+typedef struct s_data
+{
+	char        *str;
+    t_list     *prev;
+    t_list     *next;
+
+}	t_data;
+
 
 // Add these to your existing minishell.h
 /*=================== ENV LINKED LIST ==================*/
@@ -88,26 +90,17 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
-/*=================== EXPORT FUNCTIONS =================*/
-// Export builtin
-int		ft_export(char **args, t_env **env_list);
-int		process_export_arg(char *arg, t_env **env_list);
-void	sort_env_list(t_env *head);
 
-// Export utilities
-bool	validate_export(char *str);
-void	print_export(t_env *env_list, int fd);
-int		sort_print(t_env *env_list, int fd);
-t_env	*env_dup_list(t_env *head);
+// utils
+int	append_to_list(t_list **list, char *elem);
+size_t list_length(t_list *list);
+int	free_list(t_list **list);
 
-// Environment list management
-t_env	*env_new_node(char *key, char *value);
-void	env_add_back(t_env **head, t_env *new_node);
-void	env_clear_list(t_env **head);
-t_env	*env_find_node(t_env *head, char *key);
-void	env_update_node(t_env *node, char *value);
-char	*extract_key(char *str);
-char	*extract_value(char *str);
+char	**lst_to_arr(t_list *env);
+// static void	ft_swap_str_tab(int i, int j, char **tab);
+void	sort_array(char **arr, int len);
+
+
 
 //env conversion
 t_env	*env_array_to_list(char **env_array);
@@ -192,10 +185,14 @@ char **ft_strdup_array(char **env);
 int ft_cd(char **args, char ***envp);
 int update_env(char ***envp, const char *key, const char *value);
 int handle_cd_path(char *path);
-int ft_export(char **args, t_env **env_list);
 
-// static void add_first(t_token **list, t_token *new);
-// static int  token_new_element(t_token **new, char *str, int type);
+//export 
+
+bool	export(char *str, t_list **env);
+int	ft_export(char **str, t_list **env);
+
+bool	print_error(char *str);
+
 //? these are static functions wich means there are only ued within one .c scope 
 //?so adding them to the header is wrong its either the functons are not static
 //? and are allowed to be called outside the scope or are ststic and not added to the .h file

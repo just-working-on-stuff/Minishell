@@ -35,3 +35,12 @@ int	ft_strcmp(const char *s1, const char *s2)
 		i++;
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
+
+/// extra find somewhere better to keep this
+
+bool	print_error(char *str)
+{
+	if (str)
+		write(2, str, ft_strlen(str));
+	return (true);
+}

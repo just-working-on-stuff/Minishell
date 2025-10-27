@@ -12,201 +12,100 @@
 
 #include "minishell.h"
 
-static int	handle_echo(char *expanded)
-{
-	char	*args[100];
-	char	*token;
-	int		i;
+/* ---------- small helpers ---------- */
 
-	i = 0;
-	args[i++] = "echo";
-	token = expanded + 4;
-	while (*token && *token == ' ')
-		token++;
-	if (*token)
-	{
-		args[i++] = token;
-		while (*token)
-		{
-			if (*token == ' ')
-			{
-				*token = '\0';
-				token++;
-				while (*token && *token == ' ')
-					token++;
-				if (*token)
-					args[i++] = token;
-			}
-			token++;
-		}
-	}
-	args[i] = NULL;
-	return (ft_echo(args));
+static int strings_equal(const char *a, const char *b)
+{
+	if (!a || !b)
+		return (0);
+	return (ft_strcmp(a, b) == 0);
 }
 
-static int	handle_unset(char *expanded, t_shell_state *state)
-{
-	char	*args[100];
-	char	*token;
-	int		i;
+/* ---------- thin wrappers over your existing builtins ---------- */
 
-	i = 0;
-	args[i++] = "unset";
-	token = expanded + 5;
-	while (*token && *token == ' ')
-		token++;
-	while (*token)
-	{
-		args[i] = token;
-		while (*token && *token != ' ')
-			token++;
-		if (*token)
-		{
-			*token++ = '\0';
-			while (*token && *token == ' ')
-				token++;
-		}
-		i++;
-	}
-	args[i] = NULL;
-	return (exec_unset(args, state));
+static int builtin_echo(t_cmd *command)
+{
+	return (ft_echo(command->cmd_param));
 }
 
-static int	handle_exit(char *expanded, t_shell_state *state)
+static int builtin_cd(t_data *shell, t_cmd *command)
 {
-	char	*arg_start;
-	char	*args[10];
-	int		i;
-
-	arg_start = expanded + 4;
-	while (*arg_start == ' ')
-		arg_start++;
-	i = 0;
-	args[i++] = "exit";
-	if (*arg_start)
-	{
-		char *token = ft_strdup(arg_start);
-		args[i++] = token;
-		args[i] = NULL;
-		exec_exit(args, state);
-		free(token);
-	}
-	else
-	{
-		args[i] = NULL;
-		exec_exit(args, state);
-	}
-	return (0);
+	return (ft_cd(shell, command->cmd_param));
 }
 
-static int	handle_cd(char *expanded, t_shell_state *state)
+static int builtin_pwd(void)
 {
-	char	*args[100];
-	char	*token;
-	int		i;
-
-	i = 0;
-	args[i++] = "cd";
-	token = expanded + 2;
-	while (*token && *token == ' ')
-		token++;
-	if (*token)
-	{
-		args[i++] = token;
-		while (*token)
-		{
-			if (*token == ' ')
-			{
-				*token = '\0';
-				token++;
-				while (*token && *token == ' ')
-					token++;
-				if (*token)
-					args[i++] = token;
-			}
-			token++;
-		}
-	}
-	args[i] = NULL;
-	return (ft_cd(args, &state->env));
+	return (ft_pwd());
 }
 
-static int	handle_export(char *expanded, t_shell_state *state)
+static int builtin_export(t_data *shell, t_cmd *command)
 {
-	char	*args[100];
-	char	*token;
-	int		i;
-	int		result;
-	t_env	*env_list;
-
-	i = 0;
-	args[i++] = "export";
-	token = expanded + 6;
-	while (*token && *token == ' ')
-		token++;
-	if (*token)
-	{
-		args[i++] = token;
-		while (*token)
-		{
-			if (*token == ' ')
-			{
-				*token = '\0';
-				token++;
-				while (*token && *token == ' ')
-					token++;
-				if (*token)
-					args[i++] = token;
-			}
-			token++;
-		}
-	}
-	args[i] = NULL;
-	
-	// Convert current env array to linked list for export
-	env_list = env_array_to_list(state->env);
-	result = ft_export(args, &env_list);
-	
-	// Convert back to array format for compatibility
-	if (env_list)
-	{
-		char **new_env = env_list_to_array(env_list);
-		if (new_env)
-		{
-			// Free old environment and replace with new one
-			char **old_env = state->env;
-			state->env = new_env;
-			// Free old environment array
-			if (old_env)
-			{
-				int j = 0;
-				while (old_env[j])
-					free(old_env[j++]);
-				free(old_env);
-			}
-		}
-		free_env_list(env_list);
-	}
-	
-	return (result);
+	return (ft_export(command->cmd_param, &shell->env));
 }
 
-int	handle_builtins(char *expanded, t_shell_state *state)
+static int builtin_unset(t_data *shell, t_cmd *command)
 {
-	if (ft_strncmp(expanded, "echo", 4) == 0 && (expanded[4] == ' ' || expanded[4] == '\0'))
-		return (handle_echo(expanded));
-	else if (ft_strcmp(expanded, "pwd") == 0)
-		return (ft_pwd());
-	else if (ft_strcmp(expanded, "env") == 0)
-		return (ft_env(state->env));
-	else if (ft_strncmp(expanded, "unset", 5) == 0 && (expanded[5] == ' ' || expanded[5] == '\0'))
-		return (handle_unset(expanded, state));
-	else if (ft_strncmp(expanded, "exit", 4) == 0 && (expanded[4] == ' ' || expanded[4] == '\0'))
-		return (handle_exit(expanded, state));
-	else if (ft_strncmp(expanded, "cd", 2) == 0 && (expanded[2] == ' ' || expanded[2] == '\0'))
-		return (handle_cd(expanded, state));
-	else if (ft_strncmp(expanded, "export", 6) == 0 && (expanded[6] == ' ' || expanded[6] == '\0'))
-		return (handle_export(expanded, state));
-	
-	return (-1); // Not a builtin command
+	return (ft_unset(command->cmd_param, &shell->env));
+}
+
+static int builtin_env(t_data *shell)
+{
+	return (ft_env(shell->env));
+}
+
+/* ---------- core dispatcher: mirrors the "first" style ---------- */
+
+static void exec_builtin_dispatch(int stdout_backup, t_data *shell, t_cmd *command)
+{
+	char *command_name;
+
+	command_name = command->cmd_param[0];
+	if (strings_equal(command_name, "echo"))
+		shell->exit_code = builtin_echo(command);
+	else if (strings_equal(command_name, "cd"))
+		shell->exit_code = builtin_cd(shell, command);
+	else if (strings_equal(command_name, "pwd"))
+		shell->exit_code = builtin_pwd();
+	else if (strings_equal(command_name, "export"))
+		shell->exit_code = builtin_export(shell, command);
+	else if (strings_equal(command_name, "unset"))
+		shell->exit_code = builtin_unset(shell, command);
+	else if (strings_equal(command_name, "env"))
+		shell->exit_code = builtin_env(shell);
+	else if (strings_equal(command_name, "exit"))
+	{
+		if (command->outfile >= 0)
+		{
+			dup2(stdout_backup, 1);
+			close(stdout_backup);
+		}
+		ft_exit(shell, command->cmd_param);
+	}
+}
+
+/* ---------- public entry: handles stdout redirection safely ---------- */
+
+bool launch_builtin(t_data *shell, t_cmd *command)
+{
+	int stdout_backup;
+
+	stdout_backup = -1;
+	if (command->outfile >= 0)
+	{
+		stdout_backup = dup(1);
+		if (stdout_backup < 0 || dup2(command->outfile, 1) < 0)
+		{
+			if (stdout_backup >= 0)
+				close(stdout_backup);
+			shell->exit_code = 1;
+			return (true);
+		}
+	}
+	exec_builtin_dispatch(stdout_backup, shell, command);
+	if (command->outfile >= 0)
+	{
+		dup2(stdout_backup, 1);
+		close(stdout_backup);
+	}
+	return (true);
 }

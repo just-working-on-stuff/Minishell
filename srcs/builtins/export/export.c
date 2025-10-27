@@ -12,111 +12,133 @@
 
 #include "minishell.h"
 
-void	sort_env_list(t_env *head)
+//if export and no other args
+static bool	export_no_args(t_list *env)
 {
-	t_env	*current;
-	char	*temp_key;
-	char	*temp_value;
-	int		swapped;
+	char	**arr;
+	int		i;
+	int		j;
 
-	swapped = 1;
-	while (swapped)
+	arr = lst_to_arr(env);
+	if (!arr)
+		return (false);
+	sort_array(arr, list_length(env));
+	i = 0;
+	while (arr[i])
 	{
-		swapped = 0;
-		current = head;
-		while (current && current->next)
-		{
-			if (ft_strcmp(current->key, current->next->key) > 0)
-			{
-				temp_key = current->key;
-				temp_value = current->value;
-				current->key = current->next->key;
-				current->value = current->next->value;
-				current->next->key = temp_key;
-				current->next->value = temp_value;
-				swapped = 1;
-			}
-			current = current->next;
-		}
-	}
-}
-
-int	sort_print(t_env *env_list, int fd)
-{
-	t_env	*sorted_list;
-
-	sorted_list = env_dup_list(env_list);
-	if (!sorted_list)
-		return (1);
-	sort_env_list(sorted_list);
-	print_export(sorted_list, fd);
-	env_clear_list(&sorted_list);
-	return (0);
-}
-
-
-int	process_export_arg(char *arg, t_env **env_list)
-{
-	char	*key;
-	char	*value;
-	char	*equal_pos;
-	t_env	*existing;
-
-	equal_pos = ft_strchr(arg, '=');
-	if (equal_pos)
-	{
-		key = extract_key(arg);
-		value = extract_value(arg);
-	}
-	else
-	{
-		key = ft_strdup(arg);
-		value = NULL;
-	}
-	
-	if (!key)
-		return (1);
-	existing = env_find_node(*env_list, key);
-	if (existing)
-		env_update_node(existing, value);
-	else
-	{
-		existing = env_new_node(key, value);
-		if (!existing)
-		{
-			free(key);
-			free(value);
-			return (1);
-		}
-		env_add_back(env_list, existing);
-	}
-	free(key);
-	free(value);
-	return (0);
-}
-
-int	ft_export(char **args, t_env **env_list)
-{
-	int	i;
-	int	status;
-
-	if (args[1] == NULL)
-		return (sort_print(*env_list, 1));
-	i = 1;
-	status = 0;
-	while (args[i])
-	{
-		if (!validate_export(args[i]))
-		{
-			print_export_error(args[i]);
-			status = 1;
-		}
-		else if (process_export_arg(args[i], env_list) != 0)
-		{
-			print_export_alloc_error();
-			status = 1;
-		}
+		printf("declare -x ");
+		j = 0;
+		while (arr[i][j] && arr[i][j] != '=')
+			printf("%c", arr[i][j++]);
+		if (arr[i][j] && arr[i][j] == '=')
+			printf("=\"%s\"\n", &arr[i][j + 1]);
+		else
+			printf("\n");
 		i++;
 	}
-	return (status);
+	free(arr);
+	return (true);
+}
+
+//checks syntax
+static bool	valid_identifier(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str[0] || (str[0] != '_' && !ft_isalpha(str[0])))
+		return (false);
+	while (str[i] && str[i] != '=')
+	{
+		if (!ft_isalnum(str[i]) && str[i] != '_')
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
+//checks if identifier already in env
+static int	exist(char *str, t_list *env)
+{
+	int		i;
+	int		j;
+	t_list	*tmp;
+
+	if (!env)
+		return (-1);
+	i = 0;
+	while (str[i] && str[i] != '=')
+		i++;
+	j = 0;
+	tmp = env;
+	if (!ft_strncmp(tmp->str, str, i) && (tmp->str[i] == '\0' || \
+		tmp->str[i] == '='))
+		return (j);
+	tmp = tmp->next;
+	j++;
+	while (tmp != env)
+	{
+		if (!ft_strncmp(tmp->str, str, i) && (tmp->str[i] == '\0' || \
+			tmp->str[i] == '='))
+			return (j);
+		tmp = tmp->next;
+		j++;
+	}
+	return (-1);
+}
+
+//export but norm
+bool	export(char *str, t_list **env)
+{
+	int		pos;
+	int		i;
+	char	*value;
+
+	pos = exist(str, (*env));
+	value = ft_strdup(str);
+	if (!value)
+		return (false);
+	if (pos >= 0)
+	{
+		i = 0;
+		while (i < pos)
+		{
+			(*env) = (*env)->next;
+			i++;
+		}
+		free((*env)->str);
+		(*env)->str = value;
+	}
+	else if (pos == -1)
+		if (!append_to_list(env, value))
+			return (false);
+	return (true);
+}
+
+//export
+int	ft_export(char **str, t_list **env)
+{
+	int	exit_code;
+	int	i;
+
+	exit_code = 0;
+	i = 1;
+	if (!str || !str[i])
+	{
+		if (*env && !export_no_args((*env)))
+			return (print_error(ERR_MALLOC));
+		return (0);
+	}
+	while (str[i])
+	{
+		if (!valid_identifier(str[i]))
+		{
+			print_error("export: invalid identifier\n");
+			exit_code = 1;
+		}
+		else if (!export(str[i], env))
+			return (print_error(ERR_MALLOC));
+		i++;
+	}
+	return (exit_code);
 }
