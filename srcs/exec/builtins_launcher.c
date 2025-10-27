@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_launcher.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 14:22:39 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/10/27 12:31:32 by aalbugar         ###   ########.fr       */
+/*   Updated: 2025/10/27 12:41:16 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,14 @@ static int strings_equal(const char *a, const char *b)
 
 /* ---------- thin wrappers over your existing builtins ---------- */
 
-static int builtin_echo(t_redir *command)
+static int builtin_echo(t_cmd *command)
 {
-	return (ft_echo(command->cmd_param));
+	return (ft_echo(command->argv));
 }
 
-static int builtin_cd(t_data *shell, t_redir *command)
+static int builtin_cd(t_data *shell, t_cmd *command)
 {
-	return (ft_cd(shell, command->cmd_param));
+	return (ft_cd(shell, command->argv));
 }
 
 static int builtin_pwd(void)
@@ -38,14 +38,14 @@ static int builtin_pwd(void)
 	return (ft_pwd());
 }
 
-static int builtin_export(t_data *shell, t_redir *command)
+static int builtin_export(t_data *shell, t_cmd *command)
 {
-	return (ft_export(command->cmd_param, &shell->env));
+	return (ft_export(command->argv, &shell->env));
 }
 
-static int builtin_unset(t_data *shell, t_redir *command)
+static int builtin_unset(t_data *shell, t_cmd *command)
 {
-	return (ft_unset(command->cmd_param, &shell->env));
+	return (ft_unset(command->argv, &shell->env));
 }
 
 static int builtin_env(t_data *shell)
@@ -55,11 +55,11 @@ static int builtin_env(t_data *shell)
 
 /* ---------- core dispatcher: mirrors the "first" style ---------- */
 
-static void exec_builtin_dispatch(int stdout_backup, t_data *shell, t_redir *command)
+static void exec_builtin_dispatch(int stdout_backup, t_data *shell, t_cmd *command)
 {
 	char *command_name;
 
-	command_name = command->cmd_param[0];
+	command_name = command->argv[0];
 	if (strings_equal(command_name, "echo"))
 		shell->exit_code = builtin_echo(command);
 	else if (strings_equal(command_name, "cd"))
@@ -79,13 +79,13 @@ static void exec_builtin_dispatch(int stdout_backup, t_data *shell, t_redir *com
 			dup2(stdout_backup, 1);
 			close(stdout_backup);
 		}
-		ft_exit(shell, command->cmd_param);
+		ft_exit(shell, command->argv);
 	}
 }
 
 /* ---------- public entry: handles stdout redirection safely ---------- */
 
-bool launch_builtin(t_data *shell, t_redir *command)
+bool launch_builtin(t_data *shell, t_cmd *command)
 {
 	int stdout_backup;
 

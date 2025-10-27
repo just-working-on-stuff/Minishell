@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_fd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 10:52:46 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/10/27 12:31:32 by aalbugar         ###   ########.fr       */
+/*   Updated: 2025/10/27 12:39:10 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,14 @@ static int open_outfile_append(char *filename)
 	return (fd);
 }
 
-static void handle_heredoc(t_redir *cmd, char *delimiter)
+static void handle_heredoc(t_cmd *cmd, char *delimiter)
 {
 	(void)cmd;
 	(void)delimiter;
 	/* 🔹 Placeholder for heredoc handling */
 }
 
-void parse_redir(t_redir *cmd, t_token *tok)
+void parse_redir(t_cmd *cmd, t_token *tok)
 {
 	char *filename;
 

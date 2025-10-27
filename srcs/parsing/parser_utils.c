@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 12:29:31 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/10/27 12:31:32 by aalbugar         ###   ########.fr       */
+/*   Updated: 2025/10/27 12:39:10 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	pars_word(t_redir *cmd, t_token *tok)
+void	pars_word(t_cmd *cmd, t_token *tok)
 {
 	int		argc;
 	int		i;
@@ -39,9 +39,9 @@ void	pars_word(t_redir *cmd, t_token *tok)
 /*
 ** Free a linked list of commands and their argv.
 */
-void free_cmds(t_redir *cmds)
+void free_cmds(t_cmd *cmds)
 {
-    t_redir *tmp;
+    t_cmd *tmp;
     int    i;
 
     while (cmds)
@@ -68,11 +68,11 @@ void free_cmds(t_redir *cmds)
 /*
 ** Allocate and initialize a new command node.
 */
-t_redir *new_cmd(void)
+t_cmd *new_cmd(void)
 {
-    t_redir *cmd;
+    t_cmd *cmd;
 
-    cmd = malloc(sizeof(t_redir));
+    cmd = malloc(sizeof(t_cmd));
     if (!cmd)
         return (NULL);
     cmd->argv = NULL;

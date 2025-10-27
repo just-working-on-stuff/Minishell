@@ -1,30 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   shell_loop.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/22 14:10:23 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/10/27 14:24:23 by ghsaad           ###   ########.fr       */
+/*   Created: 2025/10/27 14:13:50 by ghsaad            #+#    #+#             */
+/*   Updated: 2025/10/27 14:14:09 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-#include "minishell.h"
-
-int	main(int argc, char **argv, char **envp)
+int	shell_step(t_data *data)
 {
-	t_data	data;
+	char	*line;
 
-	(void)argc;
-	(void)argv;
-	ft_bzero(&data, sizeof(data));
-	shell_init(&data, envp);
-	setup_parent_signals();
-	while (shell_step(&data))
-		;
-	shell_teardown(&data);
-	return (data.exit_code);
+	line = read_full_line();
+	if (!line)
+		return (0);
+	if (*line)
+	{
+		add_history(line);
+		if (shell_parse_line(data, line))
+			(void)shell_exec(data);
+	}
+	free(line);
+	free_cmds(data->cmds);
+	free_token(&data->token);
+	return (1);
+}
+
+void	shell_teardown(t_data *data)
+{
+	rl_clear_history();
+	free_cmds(data->cmds);
+	free_token(&data->token);
+	free_list(&data->env);
+	shell_cleanup(data);
 }

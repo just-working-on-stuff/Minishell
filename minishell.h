@@ -47,14 +47,6 @@ typedef struct s_token
 	struct s_token *next;
 }	t_token;
 
-typedef struct s_shell_state
-{
-	int last_status;
-	t_list	*env_list; // maybe change to char **env later
-	t_token 	*token;
-	pid_t	 active_child;
-}	t_shell_state;
-
 typedef struct s_list
 {
 	char			*str;
@@ -62,20 +54,37 @@ typedef struct s_list
 	struct s_list	*next;
 }	t_list;
 
-typedef struct s_redir
+typedef struct s_shell_state
 {
+	int last_status;
+	t_list	**env; // maybe change to char **env later
+	t_token 	*token;
+	pid_t	 active_child;
+}	t_shell_state;
+
+
+typedef struct s_cmd
+{
+	bool	skip_cmd;
 	char	**argv; // array of args /0
 	int		infile; // fd for input (default = STDIN_FILENO)
 	int		outfile;// fd for output (default = STDOUT_FILENO)
 	struct s_cmd	*next; // next command (after pipe)
-}	t_redir;
+	struct s_cmd	*prev; // next command (after pipe)
+}	t_cmd;
 
 
 typedef struct s_data
 {
-	char        *str;
-    t_list     *prev;
-    t_list     *next;
+	t_list		*env;
+	t_cmd		*cmds;
+	t_token		*token;
+	int			exit_code;
+	int			pip[2];
+	bool		sq;
+	// char        *str;
+    // t_list     *prev;
+    // t_list     *next;
 
 }	t_data;
 
@@ -139,26 +148,28 @@ void	disable_echoctl(void);
 /* ===================== PARSING ===================== */
 
 t_token		*lexer(char *line);
-t_redir		*parser(t_token *tokens, char **envp);
+t_cmd		*parser(t_token *tokens, char **envp);
 char		*expand_value(char *word, char **envp, int last_exit);
 void		free_token(t_token **list);
-void		free_cmds(t_redir *cmds);
+void		free_cmds(t_cmd *cmds);
 
 // int     handle_heredoc(char *delimiter);
 t_token		*new_token(char *str, int type);
 void		add_token_back(t_token **lst, t_token *new);
 // void    print_tokens(t_token *lst);
-void 		parse_redir(t_redir *cmd, t_token *tok);
-t_redir		*parser(t_token *tokens, char **envp);
-void		pars_word(t_redir *cmd, t_token *tok);
-void 		add_cmd_back(t_redir **lst, t_redir *new);
+void 		parse_redir(t_cmd *cmd, t_token *tok);
+t_cmd		*parser(t_token *tokens, char **envp);
+void		pars_word(t_cmd *cmd, t_token *tok);
+void 		add_cmd_back(t_cmd **lst, t_cmd *new);
 t_token		*lexer(char *line);
-t_redir		*new_cmd(void);
+t_cmd		*new_cmd(void);
 
 //list_token.c
 int			append_token(t_token **list, char *str, int type);
 void		free_token(t_token **list);
-char	*read_full_line(void);
+char	*read_full_line(void);   /* your function */
+int		shell_step(t_data *data);
+void	shell_teardown(t_data *data);
 int	has_unclosed_quote(const char *line);
 int get_quoted_str(char *line, int i, char **out);
 int	handle_word(t_token **head, char *line, int i);

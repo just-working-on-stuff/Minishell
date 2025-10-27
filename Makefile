@@ -10,7 +10,6 @@ SRCS := srcs/main.c \
 		srcs/utils/utils_array.c \
         srcs/utils/signals.c \
         srcs/utils/signals2.c\
-		srcs/exec/run_simple.c\
 		srcs/parsing/lexer.c\
 		srcs/parsing/lexers_utils.c\
 		srcs/parsing/parser_utils.c\
@@ -31,6 +30,8 @@ SRCS := srcs/main.c \
 		srcs/builtins/export/export.c \
 		srcs/builtins/builtins_utils.c \
 		srcs/exec/builtins_launcher.c \
+		srcs/exec/shell_loop.c \
+		srcs/exec/run_simple.c\
 
 OBJS := $(SRCS:.c=.o)
 
