@@ -42,8 +42,6 @@ int run_simple_command(char *const argv[], char *const envp[], t_shell_state *st
         perror("minishell: execve");
         _exit((errno == EACCES) ? 126 : 127);
     }
-
-    /* --- Parent process --- */
     state->active_child = pid;                     /* we’re executing a child now */
     if (waitpid(pid, &status, 0) < 0)
     {

@@ -3,61 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_launcher.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 14:22:39 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/10/27 17:43:40 by aalbugar         ###   ########.fr       */
+/*   Updated: 2025/10/27 18:29:06 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/* ---------- small helpers ---------- */
-
-static int strings_equal(const char *a, const char *b)
-{
-	if (!a || !b)
-		return (0);
-	return (ft_strcmp(a, b) == 0);
-}
-// clear_builtin
-int	clear_builtin(t_cmd *cmd)
-{
-	(void)cmd;
-	write(1, "\033[2J\033[H", 7);
-	return (0);
-}
-/* ---------- thin wrappers over your existing builtins ---------- */
-
-static int builtin_echo(t_cmd *command)
-{
-	return (ft_echo(command->argv));
-}
-
-static int builtin_cd(t_data *shell, t_cmd *command)
-{
-	return (ft_cd(shell, command->argv));
-}
-
-static int builtin_pwd(void)
-{
-	return (ft_pwd());
-}
-
-static int builtin_export(t_data *shell, t_cmd *command)
-{
-	return (ft_export(command->argv, &shell->env));
-}
-
-static int builtin_unset(t_data *shell, t_cmd *command)
-{
-	return (ft_unset(command->argv, &shell->env));
-}
-
-static int builtin_env(t_data *shell)
-{
-	return (ft_env(shell->env));
-}
 
 /* ---------- core dispatcher: mirrors the "first" style ---------- */
 static void	handle_exit_redirection(int stdout_backup, t_data *shell, t_cmd *command)
