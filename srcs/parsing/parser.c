@@ -6,7 +6,7 @@
 /*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 13:34:44 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/09/30 12:54:44 by aalbugar         ###   ########.fr       */
+/*   Updated: 2025/10/27 12:33:14 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ static int is_redir(int type)
 		|| type == TOK_REDIR_OUT || type == TOK_APPEND || type == TOK_HEREDOC);
 }
 // Add a command node to the end of the list.
-void add_cmd_back(t_cmd **lst, t_cmd *new)
+void add_cmd_back(t_redir **lst, t_redir *new)
 {
-	t_cmd *tmp;
+	t_redir *tmp;
 
 	if (!new)
 		return;
@@ -35,13 +35,13 @@ void add_cmd_back(t_cmd **lst, t_cmd *new)
 	tmp->next = new;
 }
 
-static void start_new_cmd(t_cmd **cmds, t_cmd **current)
+static void start_new_cmd(t_redir **cmds, t_redir **current)
 {
 	*current = new_cmd();
 	add_cmd_back(cmds, *current);
 }
 
-static void process_token(t_cmd *current, t_token **tokens)
+static void process_token(t_redir *current, t_token **tokens)
 {
 	if ((*tokens)->type == TOK_PIPE)
 		start_new_cmd(NULL, &current); /* handled outside */
@@ -55,10 +55,10 @@ static void process_token(t_cmd *current, t_token **tokens)
 }
 
 /* ======================= MAIN PARSER ======================= */
-t_cmd *parser(t_token *tokens, char **envp)
+t_redir *parser(t_token *tokens, char **envp)
 {
-	t_cmd *cmds;
-	t_cmd *current;
+	t_redir *cmds;
+	t_redir *current;
 
 	(void)envp;
 	cmds = NULL;

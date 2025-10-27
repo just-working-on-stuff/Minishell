@@ -6,13 +6,13 @@
 /*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 12:29:31 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/10/02 17:33:10 by aalbugar         ###   ########.fr       */
+/*   Updated: 2025/10/27 12:31:32 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	pars_word(t_cmd *cmd, t_token *tok)
+void	pars_word(t_redir *cmd, t_token *tok)
 {
 	int		argc;
 	int		i;
@@ -39,9 +39,9 @@ void	pars_word(t_cmd *cmd, t_token *tok)
 /*
 ** Free a linked list of commands and their argv.
 */
-void free_cmds(t_cmd *cmds)
+void free_cmds(t_redir *cmds)
 {
-    t_cmd *tmp;
+    t_redir *tmp;
     int    i;
 
     while (cmds)
@@ -68,11 +68,11 @@ void free_cmds(t_cmd *cmds)
 /*
 ** Allocate and initialize a new command node.
 */
-t_cmd *new_cmd(void)
+t_redir *new_cmd(void)
 {
-    t_cmd *cmd;
+    t_redir *cmd;
 
-    cmd = malloc(sizeof(t_cmd));
+    cmd = malloc(sizeof(t_redir));
     if (!cmd)
         return (NULL);
     cmd->argv = NULL;

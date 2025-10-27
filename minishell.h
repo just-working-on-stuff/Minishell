@@ -62,13 +62,13 @@ typedef struct s_list
 	struct s_list	*next;
 }	t_list;
 
-typedef struct s_cmd
+typedef struct s_redir
 {
 	char	**argv; // array of args /0
 	int		infile; // fd for input (default = STDIN_FILENO)
 	int		outfile;// fd for output (default = STDOUT_FILENO)
 	struct s_cmd	*next; // next command (after pipe)
-}	t_cmd;
+}	t_redir;
 
 
 typedef struct s_data
@@ -139,21 +139,21 @@ void	disable_echoctl(void);
 /* ===================== PARSING ===================== */
 
 t_token		*lexer(char *line);
-t_cmd		*parser(t_token *tokens, char **envp);
+t_redir		*parser(t_token *tokens, char **envp);
 char		*expand_value(char *word, char **envp, int last_exit);
 void		free_token(t_token **list);
-void		free_cmds(t_cmd *cmds);
+void		free_cmds(t_redir *cmds);
 
 // int     handle_heredoc(char *delimiter);
 t_token		*new_token(char *str, int type);
 void		add_token_back(t_token **lst, t_token *new);
 // void    print_tokens(t_token *lst);
-void 		parse_redir(t_cmd *cmd, t_token *tok);
-t_cmd		*parser(t_token *tokens, char **envp);
-void		pars_word(t_cmd *cmd, t_token *tok);
-void 		add_cmd_back(t_cmd **lst, t_cmd *new);
+void 		parse_redir(t_redir *cmd, t_token *tok);
+t_redir		*parser(t_token *tokens, char **envp);
+void		pars_word(t_redir *cmd, t_token *tok);
+void 		add_cmd_back(t_redir **lst, t_redir *new);
 t_token		*lexer(char *line);
-t_cmd		*new_cmd(void);
+t_redir		*new_cmd(void);
 
 //list_token.c
 int			append_token(t_token **list, char *str, int type);
