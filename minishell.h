@@ -182,9 +182,7 @@ char	*ft_strjoin_free(char *s1, char *s2);
 int	exec_exit(char **argv, t_shell_state *state);
 int	ft_strcmp(const char *s1, const char *s2);
 
-int	ft_echo(char **args);
-int	ft_pwd(void);
-int ft_env(char **envp);
+
 int	exec_unset(char **argv, t_shell_state *state);
 void	remove_env_entry(char ***env, int remove_i);
 int	find_env_index(char **env, char *name);
@@ -193,14 +191,18 @@ int	is_valid_env_var_name(char *name);
 char **ft_strdup_array(char **env);
 
 //cd shit
-int ft_cd(char **args, char ***envp);
-int update_env(char ***envp, const char *key, const char *value);
-int handle_cd_path(char *path);
+
 
 //export 
 
 bool	export(char *str, t_list **env);
 int	ft_export(char **str, t_list **env);
+int	ft_echo(char **args);
+int	ft_pwd(void);
+int ft_env(char **envp);
+int ft_cd(char **args, char ***envp);
+int update_env(char ***envp, const char *key, const char *value);
+int handle_cd_path(char *path);
 
 bool	print_error(char *str);
 

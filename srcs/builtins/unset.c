@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 12:50:15 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/10/14 13:52:22 by aalbugar         ###   ########.fr       */
+/*   Updated: 2025/10/27 19:48:39 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*
 This function removes an environment variable from the env array at the specified index.
 */
-static void	unset_env_var(char *name, char ***env)
+static void	unset_env_var(char *name, char **env)
 {
 	int	index;
 
