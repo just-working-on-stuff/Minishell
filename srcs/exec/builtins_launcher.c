@@ -41,7 +41,7 @@ static void exec_builtin_dispatch(int stdout_backup, t_data *shell, t_cmd *comma
 	else if (strings_equal(command_name, "env"))
 		shell->exit_code = builtin_env(shell);
 	else if (strings_equal(command_name, "clear"))
-		shell->exit_code = builtin_clear();
+		shell->exit_code = clear_builtin();
 	else if (strings_equal(command_name, "exit"))
 		handle_exit_redirection(stdout_backup, shell, command);
 }

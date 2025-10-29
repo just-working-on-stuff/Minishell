@@ -12,27 +12,39 @@
 
 #include "minishell.h"
 
-static int builtin_cd(t_data *shell, t_cmd *command)
+int	builtin_cd(t_data *shell, t_cmd *command)
 {
-	return (ft_cd(shell, command->argv));
+	return (ft_cd(command->argv, &shell->env));
 }
 
-static int builtin_pwd(void)
+int	builtin_pwd(void)
 {
 	return (ft_pwd());
 }
 
-static int builtin_export(t_data *shell, t_cmd *command)
+int	builtin_export(t_data *shell, t_cmd *command)
 {
 	return (ft_export(command->argv, &shell->env));
 }
 
-static int builtin_unset(t_data *shell, t_cmd *command)
+int	builtin_unset(t_data *shell, t_cmd *command)
 {
-	return (ft_unset(command->argv, &shell->env));
+	// Create a temporary shell_state structure
+	t_shell_state temp_state;
+	
+	temp_state.env = shell->env;
+	temp_state.last_status = shell->exit_code;
+	return (exec_unset(command->argv, &temp_state));
 }
 
-static int builtin_env(t_data *shell)
+int	builtin_env(t_data *shell)
 {
-	return (ft_env(shell->env));
+	char	**env_arr;
+
+	env_arr = lst_to_arr(shell->env);
+	if (!env_arr)
+		return (1);
+	ft_env(env_arr);
+	free_array(env_arr);
+	return (0);
 }

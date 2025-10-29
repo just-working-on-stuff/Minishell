@@ -17,6 +17,7 @@ static int is_redir(int type)
 	return (type == TOK_REDIR_IN
 		|| type == TOK_REDIR_OUT || type == TOK_APPEND || type == TOK_HEREDOC);
 }
+
 // Add a command node to the end of the list.
 void add_cmd_back(t_cmd **lst, t_cmd *new)
 {
@@ -41,13 +42,13 @@ static void start_new_cmd(t_cmd **cmds, t_cmd **current)
 	add_cmd_back(cmds, *current);
 }
 
-static void process_token(t_cmd *current, t_token **tokens)
+static void process_token(t_cmd *current, t_token **tokens, t_data *data)
 {
 	if ((*tokens)->type == TOK_PIPE)
 		start_new_cmd(NULL, &current); /* handled outside */
 	else if (is_redir((*tokens)->type))
 	{
-		parse_redir(current, *tokens);
+		parse_redir(current, *tokens, data);
 		*tokens = (*tokens)->next; /* skip filename */
 	}
 	else
@@ -55,12 +56,11 @@ static void process_token(t_cmd *current, t_token **tokens)
 }
 
 /* ======================= MAIN PARSER ======================= */
-t_cmd *parser(t_token *tokens, char **envp)
+t_cmd *parser(t_token *tokens, t_data *data)
 {
 	t_cmd *cmds;
 	t_cmd *current;
 
-	(void)envp;
 	cmds = NULL;
 	start_new_cmd(&cmds, &current);
 	while (tokens)
@@ -68,7 +68,7 @@ t_cmd *parser(t_token *tokens, char **envp)
 		if (tokens->type == TOK_PIPE)
 			start_new_cmd(&cmds, &current);
 		else
-			process_token(current, &tokens);
+			process_token(current, &tokens, data);
 		tokens = tokens->next;
 	}
 	return (cmds);

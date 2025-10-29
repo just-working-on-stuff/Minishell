@@ -14,21 +14,20 @@
 
 /* ---------- small helpers ---------- */
 
-static int strings_equal(const char *a, const char *b)
+int strings_equal(const char *a, const char *b)
 {
 	if (!a || !b)
 		return (0);
 	return (ft_strcmp(a, b) == 0);
 }
 // clear_builtin
-int	clear_builtin(t_cmd *cmd)
+int	clear_builtin(void)
 {
-	(void)cmd;
 	write(1, "\033[2J\033[H", 7);
 	return (0);
 }
 
-static int builtin_echo(t_cmd *command)
+int builtin_echo(t_cmd *command)
 {
 	return (ft_echo(command->argv));
 }

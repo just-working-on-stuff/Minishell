@@ -12,20 +12,37 @@
 
 #include "minishell.h"
 
-/*
-This function removes an environment variable from the env array at the specified index.
-*/
-static void	unset_env_var(char *name, char **env)
+static void	remove_env_node(t_list **env, char *name)
 {
-	int	index;
+	t_list	*current;
+	t_list	*prev;
+	int		name_len;
 
-	if (!env || !*env)
-		return;
-	index = find_env_index(*env, name);
-	if (index == -1)
-		return;
-	remove_env_entry(env, index);
+	if (!env || !*env || !name)
+		return ;
+	name_len = ft_strlen(name);
+	current = *env;
+	prev = NULL;
+	while (1)
+	{
+		if (ft_strncmp(current->str, name, name_len) == 0
+			&& (current->str[name_len] == '=' || current->str[name_len] == '\0'))
+		{
+			if (prev)
+				prev->next = current->next;
+			else
+				*env = current->next;
+			free(current->str);
+			free(current);
+			return ;
+		}
+		prev = current;
+		current = current->next;
+		if (current == *env)
+			break ;
+	}
 }
+
 /*
 This function implements the unset builtin command.
 */
@@ -39,7 +56,7 @@ int	exec_unset(char **argv, t_shell_state *state)
 	while (argv[i])
 	{
 		if (is_valid_env_var_name(argv[i]))
-			unset_env_var(argv[i], &state->env);
+			remove_env_node(state->env, argv[i]);  // ← FIXED: removed the &
 		else
 		{
 			ft_putstr_fd("minishell: unset: `", 2);

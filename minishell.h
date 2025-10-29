@@ -19,6 +19,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
+pid_t	g_signal_pid;
+
 /* ===================== TOKENS ===================== */
 
 # define TOK_CMD       0
@@ -148,7 +150,7 @@ void	disable_echoctl(void);
 /* ===================== PARSING ===================== */
 
 t_token		*lexer(char *line);
-t_cmd		*parser(t_token *tokens, char **envp);
+t_cmd		*parser(t_token *tokens, t_data *data);
 char		*expand_value(char *word, char **envp, int last_exit);
 void		free_token(t_token **list);
 void		free_cmds(t_cmd *cmds);
@@ -157,7 +159,6 @@ void		free_cmds(t_cmd *cmds);
 t_token		*new_token(char *str, int type);
 void		add_token_back(t_token **lst, t_token *new);
 // void    print_tokens(t_token *lst);
-t_cmd		*parser(t_token *tokens, char **envp);
 void parse_redir(t_cmd *cmd, t_token *tok, t_data *data);
 void		pars_word(t_cmd *cmd, t_token *tok);
 void 		add_cmd_back(t_cmd **lst, t_cmd *new);
@@ -184,11 +185,7 @@ int	ft_strcmp(const char *s1, const char *s2);
 
 
 int	exec_unset(char **argv, t_shell_state *state);
-void	remove_env_entry(char ***env, int remove_i);
-int	find_env_index(char **env, char *name);
-int	count_env_vars(char **env);
 int	is_valid_env_var_name(char *name);
-char **ft_strdup_array(char **env);
 
 /* ===================== EXECUTION ===================== */
 bool	exec_pipeline(t_data *data);
@@ -212,8 +209,22 @@ int ft_env(char **envp);
 int	ft_cd(char **args, t_list **env);
 int update_env(char ***envp, const char *key, const char *value);
 int handle_cd_path(char *path);
+int	builtin_clear(void);
+char	*create_env_var_string(char *key, char *value);
+int	handle_cd_with_path(char *path);
 
 bool	print_error(char *str);
+
+int strings_equal(const char *a, const char *b);
+int	builtin_cd(t_data *shell, t_cmd *command);
+int	builtin_pwd(void);
+int	builtin_export(t_data *shell, t_cmd *command);
+int	builtin_unset(t_data *shell, t_cmd *command);
+int	builtin_env(t_data *shell);
+int	clear_builtin(void);
+int builtin_echo(t_cmd *command);
+void	ft_exit(t_data *data, char **args);
+
 
 //? these are static functions wich means there are only ued within one .c scope
 //?so adding them to the header is wrong its either the functons are not static

@@ -12,42 +12,76 @@
 
 #include "minishell.h"
 
-#include "minishell.h"
+// static int	is_numeric_str(char *s)
+// {
+// 	int	i;
 
-static int	is_numeric_str(char *s)
+// 	if (!s || !*s)
+// 		return (0);
+// 	if (s[0] == '+' || s[0] == '-')
+// 		s++;
+// 	i = 0;
+// 	while (s[i])
+// 	{
+// 		if (!ft_isdigit(s[i]))
+// 			return (0);
+// 		i++;
+// 	}
+// 	return (1);
+// }
+
+static int	almost_atoi(char *str, int *err)
 {
-	int	i;
+	unsigned long long	ret;
+	int					i;
+	int					j;
+	int					pn;
 
-	if (!s || !*s)
-		return (0);
-	if (s[0] == '+' || s[0] == '-')
-		s++;
 	i = 0;
-	while (s[i])
-	{
-		if (!ft_isdigit(s[i]))
-			return (0);
+	while ((9 <= str[i] && str[i] <= 13) || str[i] == 32)
 		i++;
-	}
-	return (1);
+	pn = 1;
+	if (str[i] == '+' || str[i] == '-')
+		if (str[i++] == '-')
+			pn = -1;
+	j = i;
+	ret = 0;
+	while ('0' <= str[i] && str[i] <= '9')
+		ret = ret * 10 + (str[i++] - 48);
+	while ((9 <= str[i] && str[i] <= 13) || str[i] == 32)
+		i++;
+	if (str[i] || i - j > 20 || ((pn == -1 && (ret - 1) > LONG_MAX) || \
+		(pn == 1 && (ret > LONG_MAX))))
+		*err = 1;
+	return ((int)((ret * pn) % 256));
 }
 
-int	exec_exit(char **argv, t_shell_state *state)
+void	ft_exit(t_data *data, char **args)
 {
+	int	ret;
+	int	err;
+
+	ret = data->exit_code;
+	err = 0;
 	ft_putstr_fd("exit\n", 1);
-	if (!argv[1])
-		exit(state->last_status);
-	if (!is_numeric_str(argv[1]))
+	if (args[1])
 	{
-		ft_putstr_fd("minishell: exit: numeric argument required\n", 2);
-		exit(255);
+		ret = almost_atoi(args[1], &err);
+		if (err)
+		{
+			ft_putstr_fd("minishell: exit: numeric argument required\n", 2);
+			ret = 2;
+		}
 	}
-	if (argv[2])
+	if (args[1] && args[2])
 	{
 		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-		state->last_status = 1;
-		return (1);
+		data->exit_code = 1;
+		return ;
 	}
-	exit(ft_atoi(argv[1]) % 256);
+	free_cmds(data->cmds);
+	free_token(&data->token);
+	free_list(&data->env);
+	rl_clear_history();
+	exit(ret);
 }
-

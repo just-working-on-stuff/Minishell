@@ -41,7 +41,7 @@ static int	update_env_var(t_list **env, char *key, char *value)
 	return (1);
 }
 
-static int	handle_cd_with_path(char *path)
+int	handle_cd_with_path(char *path)
 {
 	if (chdir(path) == -1)
 	{
