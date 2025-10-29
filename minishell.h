@@ -8,7 +8,7 @@
 
 # include "../libft/libft.h"
 # include <fcntl.h>
-# include <stdio.h> 
+# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <signal.h>
@@ -36,8 +36,8 @@
 // # define ERR_PIPE 	1
 # define ERR_PIPE 	"Pipe creation failed\n"
 
-// # define ERR_FORK 	1	
-# define ERR_FORK 	"Fork failed\n"	
+// # define ERR_FORK 	1
+# define ERR_FORK 	"Fork failed\n"
 
 typedef struct s_token
 {
@@ -157,8 +157,8 @@ void		free_cmds(t_cmd *cmds);
 t_token		*new_token(char *str, int type);
 void		add_token_back(t_token **lst, t_token *new);
 // void    print_tokens(t_token *lst);
-void 		parse_redir(t_cmd *cmd, t_token *tok);
 t_cmd		*parser(t_token *tokens, char **envp);
+void parse_redir(t_cmd *cmd, t_token *tok, t_data *data);
 void		pars_word(t_cmd *cmd, t_token *tok);
 void 		add_cmd_back(t_cmd **lst, t_cmd *new);
 t_token		*lexer(char *line);
@@ -190,23 +190,32 @@ int	count_env_vars(char **env);
 int	is_valid_env_var_name(char *name);
 char **ft_strdup_array(char **env);
 
-//cd shit
+/* ===================== EXECUTION ===================== */
+bool	exec_pipeline(t_data *data);
+void	child_process(t_data *data, t_cmd *cmd, int *pip);
+char	*find_cmd(t_data *data, char *cmd);
+int		handle_heredoc(char *delimiter, t_data *data);
+void	parse_redir(t_cmd *cmd, t_token *tok, t_data *data);
 
+/* ===================== SHELL EXECUTION ===================== */
+bool	shell_parse_line(t_data *data, char *line);
+bool	shell_exec(t_data *data);
+void	shell_cleanup(t_data *data);
 
-//export 
+//export
 
 bool	export(char *str, t_list **env);
 int	ft_export(char **str, t_list **env);
 int	ft_echo(char **args);
 int	ft_pwd(void);
 int ft_env(char **envp);
-int ft_cd(char **args, char ***envp);
+int	ft_cd(char **args, t_list **env);
 int update_env(char ***envp, const char *key, const char *value);
 int handle_cd_path(char *path);
 
 bool	print_error(char *str);
 
-//? these are static functions wich means there are only ued within one .c scope 
+//? these are static functions wich means there are only ued within one .c scope
 //?so adding them to the header is wrong its either the functons are not static
 //? and are allowed to be called outside the scope or are ststic and not added to the .h file
 

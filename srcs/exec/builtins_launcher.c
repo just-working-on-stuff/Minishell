@@ -26,12 +26,12 @@ static void	handle_exit_redirection(int stdout_backup, t_data *shell, t_cmd *com
 static void exec_builtin_dispatch(int stdout_backup, t_data *shell, t_cmd *command)
 {
 	char *command_name;
-	
+
 	command_name = command->argv[0];
 	if (strings_equal(command_name, "echo"))
 		shell->exit_code = builtin_echo(command);
 	else if (strings_equal(command_name, "cd"))
-		shell->exit_code = builtin_cd(shell, command);
+		shell->exit_code = ft_cd(command->argv, &shell->env);
 	else if (strings_equal(command_name, "pwd"))
 		shell->exit_code = builtin_pwd();
 	else if (strings_equal(command_name, "export"))

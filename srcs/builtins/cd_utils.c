@@ -5,46 +5,38 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/23 12:15:53 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/10/23 12:16:25 by ghsaad           ###   ########.fr       */
+/*   Created: 2025/10/27 20:00:00 by ghsaad            #+#    #+#             */
+/*   Updated: 2025/10/27 20:00:00 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*get_home_from_env(char **envp)
+char	*ft_strjoin_free(char *s1, char *s2)
 {
-	int	i;
+	char	*result;
 
-	i = 0;
-	while (envp && envp[i])
-	{
-		if (ft_strncmp(envp[i], "HOME=", 5) == 0)
-			return (envp[i] + 5);
-		i++;
-	}
-	return (NULL);
+	if (!s1 || !s2)
+		return (NULL);
+	result = ft_strjoin(s1, s2);
+	free(s1);
+	free(s2);
+	return (result);
 }
-
-int	handle_cd_home(char **envp)
-{
-	char	*home;
-
-	home = get_home_from_env(envp);
-	if (!home)
-	{
-		ft_putstr_fd("minishell: cd: HOME not set\n", 2);
-		return (1);
-	}
-	return (handle_cd_path(home));
-}
-
 
 static char	*get_last_dir(void)
 {
 	static char	last_dir[PATH_MAX];
 
 	return (last_dir);
+}
+
+void	update_last_dir(char *path)
+{
+	char	*last_dir;
+
+	last_dir = get_last_dir();
+	ft_strlcpy(last_dir, path, PATH_MAX);
 }
 
 int	handle_cd_prev(void)
@@ -57,16 +49,28 @@ int	handle_cd_prev(void)
 		ft_putstr_fd("minishell: cd: OLDPWD not set\n", 2);
 		return (1);
 	}
-	if (handle_cd_path(last_dir))
+	if (handle_cd_with_path(last_dir))
 		return (1);
 	printf("%s\n", last_dir);
 	return (0);
 }
 
-void	update_last_dir(char *path)
+char	*create_env_var_string(char *key, char *value)
 {
-	char	*last_dir;
+	char	*new_var;
+	char	*temp;
 
-	last_dir = get_last_dir();
-	ft_strlcpy(last_dir, path, PATH_MAX);
+	if (!key || !value)
+		return (NULL);
+	new_var = ft_strjoin(key, "=");
+	if (!new_var)
+		return (NULL);
+	temp = ft_strdup(value);
+	if (!temp)
+	{
+		free(new_var);
+		return (NULL);
+	}
+	new_var = ft_strjoin_free(new_var, temp);
+	return (new_var);
 }
