@@ -6,7 +6,7 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 14:10:23 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/10/27 19:45:29 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/10/30 17:33:37 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,18 +35,35 @@ static int	init_shell_env(t_data *data, char **envp)
 	int		i;
 	char	*tmp;
 
+	printf("DEBUG: Initializing shell environment\n");
+	printf("DEBUG: envp = %p\n", (void*)envp);
+	if (envp)
+		printf("DEBUG: envp[0] = %s\n", envp[0] ? envp[0] : "NULL");
+	
 	i = 0;
 	if (!envp || !envp[0])
+	{
+		printf("DEBUG: Using make_env2 (no envp provided)\n");
 		return (make_env2(data));
+	}
+	
+	printf("DEBUG: Copying environment variables\n");
 	while (envp[i])
 	{
 		tmp = ft_strdup(envp[i]);
 		if (!tmp)
-			return (free_list(&data->env));
+		{
+			free_list(&data->env);  // ← CHANGED: Now just call without return check
+			return (0);
+		}
 		if (!append_to_list(&data->env, tmp))
-			return (free_list(&data->env));
+		{
+			free_list(&data->env);  // ← CHANGED: Now just call without return check
+			return (0);
+		}
 		i++;
 	}
+	printf("DEBUG: Environment initialized with %d variables\n", i);
 	return (1);
 }
 

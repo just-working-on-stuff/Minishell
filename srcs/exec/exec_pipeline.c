@@ -6,13 +6,13 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 20:00:00 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/10/27 20:00:00 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/10/30 16:41:06 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static bool	is_builtin(char *cmd)
+bool	is_builtin(char *cmd)
 {
 	if (!cmd)
 		return (false);
@@ -26,6 +26,8 @@ static bool	is_builtin(char *cmd)
 
 static void	parent_process(t_data *data, t_cmd *cmd, int *pip)
 {
+	(void)data;
+
 	close(pip[1]);
 	if (cmd->infile >= 0)
 		close(cmd->infile);

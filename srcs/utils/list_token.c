@@ -6,7 +6,7 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 11:36:17 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/10/23 10:58:58 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/10/30 17:36:12 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,25 +63,24 @@ int append_token(t_token **list, char *str, int type)
    Else → insert new token at the end (before head), fixing next/prev links.
    Returns 1 on success. */
  
-void    free_token(t_token **list)
-{
-    t_token *temp;
-    t_token *current;
-
-    if (!(*list))
-        return ;
-    current = *list;
-    while (current->next != *list)
-    {
-        temp = current;
-        current = current->next;
-        free(temp->str);
-        free(temp);
-    }
-    free(current->str);
-    free(current);
-    *list = NULL;
-}
+   void    free_token(t_token **list)
+   {
+       t_token *cur;
+       t_token *next;
+   
+       if (!list || !*list)
+           return;
+       cur = *list;
+       while (cur)
+       {
+           next = cur->next;
+           free(cur->str);
+           free(cur);
+           cur = next;
+       }
+       *list = NULL;
+   }
+   
 //Free the entire circular token list, including each token string.
 //Resets list pointer to NULL to avoid dangling reference. 
 

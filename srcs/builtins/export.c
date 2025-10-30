@@ -6,7 +6,7 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 14:08:52 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/10/23 12:42:48 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/10/30 18:03:59 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,11 +101,8 @@ bool	export(char *str, t_list **env)
 	if (pos >= 0)
 	{
 		i = 0;
-		while (i < pos)
-		{
+		while (i++ < pos)
 			(*env) = (*env)->next;
-			i++;
-		}
 		free((*env)->str);
 		(*env)->str = value;
 	}

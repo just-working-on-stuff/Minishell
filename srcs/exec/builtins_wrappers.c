@@ -6,7 +6,7 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 18:28:07 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/10/27 18:28:10 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/10/30 16:34:58 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,9 @@ int	builtin_export(t_data *shell, t_cmd *command)
 
 int	builtin_unset(t_data *shell, t_cmd *command)
 {
-	// Create a temporary shell_state structure
-	t_shell_state temp_state;
-	
-	temp_state.env = shell->env;
+	t_shell_state	temp_state;
+
+	temp_state.env = &shell->env;
 	temp_state.last_status = shell->exit_code;
 	return (exec_unset(command->argv, &temp_state));
 }

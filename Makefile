@@ -38,8 +38,8 @@ SRCS := srcs/main.c \
 		srcs/exec/exec_child.c \
 		srcs/exec/exec_pipeline.c \
 		srcs/exec/heredoc.c \
-		srcs/exec/run_simple.c \
-		srcs/exec/shell_loop.c
+		srcs/exec/shell_loop.c \
+		srcs/exec/shell_exec.c
 
 OBJS := $(SRCS:.c=.o)
 

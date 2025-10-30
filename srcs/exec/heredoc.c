@@ -6,7 +6,7 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 20:00:00 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/10/27 20:00:00 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/10/30 16:40:52 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ static bool	read_heredoc_input(int fd, char *delimiter, t_data *data)
 {
 	char	*line;
 
+	(void)data;
 	while (1)
 	{
 		line = readline("> ");

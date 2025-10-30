@@ -6,7 +6,7 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 13:34:44 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/10/27 12:39:10 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/10/30 18:08:15 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static void process_token(t_cmd *current, t_token **tokens, t_data *data)
 		*tokens = (*tokens)->next; /* skip filename */
 	}
 	else
-		pars_word(current, *tokens);
+		pars_word(current, *tokens, data);
 }
 
 /* ======================= MAIN PARSER ======================= */

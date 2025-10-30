@@ -1,43 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_array.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/30 16:35:59 by ghsaad            #+#    #+#             */
+/*   Updated: 2025/10/30 18:21:16 by ghsaad           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-
-// void	free_str_array(char **array)
-// {
-// 	int	i;
-
-// 	if (!array)
-// 		return ;
-// 	i = 0;
-// 	while (array[i])
-// 	{
-// 		free(array[i]);
-// 		i++;
-// 	}
-// 	free(array);
-// }
-
-// char	**dup_str_array(char **array)
-// {
-// 	char	**copy;
-// 	int		count;
-// 	int		i;
-
-// 	count = 0;
-// 	while (array && array[count])
-// 		count++;
-// 	copy = malloc(sizeof(char *) * (count + 1));
-// 	if (!copy)
-// 		return (NULL);
-// 	i = 0;
-// 	while (i < count)
-// 	{
-// 		copy[i] = ft_strdup(array[i]);
-// 		if (!copy[i])
-// 			return (free_str_array(copy), NULL);
-// 		i++;
-// 	}
-// 	copy[i] = NULL;
-// 	return (copy);
-// }
 
 char	**lst_to_arr(t_list *env)
 {
@@ -45,24 +18,26 @@ char	**lst_to_arr(t_list *env)
 	char	**dest;
 	int		i;
 
-	dest = NULL;
-	i = 0;
-	lst = env;
-	dest = (char **)malloc(sizeof(char *) * (list_length(lst) + 1));
+	if (!env)
+		return (NULL);
+	dest = malloc(sizeof(char *) * (list_length(env) + 1));
 	if (!dest)
 		return (NULL);
-	dest[i] = (lst->str);
+	i = 0;
+	lst = env;
+	dest[i] = ft_strdup(lst->str);  // CHANGED: Use ft_strdup instead of direct pointer
 	lst = lst->next;
 	i++;
 	while (lst != env)
 	{
-		dest[i] = (lst->str);
+		dest[i] = ft_strdup(lst->str);  // CHANGED: Use ft_strdup
 		lst = lst->next;
 		i++;
 	}
 	dest[i] = NULL;
 	return (dest);
 }
+
 
 //swap to elems in array
 static void	ft_swap_str_tab(int i, int j, char **tab)

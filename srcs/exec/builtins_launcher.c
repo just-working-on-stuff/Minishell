@@ -6,7 +6,7 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 14:22:39 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/10/27 18:29:06 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/10/30 17:26:36 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,25 +25,25 @@ static void	handle_exit_redirection(int stdout_backup, t_data *shell, t_cmd *com
 
 static void exec_builtin_dispatch(int stdout_backup, t_data *shell, t_cmd *command)
 {
-	char *command_name;
+    char *command_name;
 
-	command_name = command->argv[0];
-	if (strings_equal(command_name, "echo"))
-		shell->exit_code = builtin_echo(command);
-	else if (strings_equal(command_name, "cd"))
-		shell->exit_code = ft_cd(command->argv, &shell->env);
-	else if (strings_equal(command_name, "pwd"))
-		shell->exit_code = builtin_pwd();
-	else if (strings_equal(command_name, "export"))
-		shell->exit_code = builtin_export(shell, command);
-	else if (strings_equal(command_name, "unset"))
-		shell->exit_code = builtin_unset(shell, command);
-	else if (strings_equal(command_name, "env"))
-		shell->exit_code = builtin_env(shell);
-	else if (strings_equal(command_name, "clear"))
-		shell->exit_code = clear_builtin();
-	else if (strings_equal(command_name, "exit"))
-		handle_exit_redirection(stdout_backup, shell, command);
+    command_name = command->argv[0];
+    if (strings_equal(command_name, "echo"))
+        shell->exit_code = builtin_echo(command);
+    else if (strings_equal(command_name, "cd"))
+        shell->exit_code = builtin_cd(shell, command);
+    else if (strings_equal(command_name, "pwd"))
+        shell->exit_code = builtin_pwd();
+    else if (strings_equal(command_name, "export"))
+        shell->exit_code = builtin_export(shell, command);
+    else if (strings_equal(command_name, "unset"))
+        shell->exit_code = builtin_unset(shell, command);
+    else if (strings_equal(command_name, "env"))
+        shell->exit_code = builtin_env(shell);
+    else if (strings_equal(command_name, "clear"))
+        shell->exit_code = clear_builtin();
+    else if (strings_equal(command_name, "exit"))
+        handle_exit_redirection(stdout_backup, shell, command);
 }
 /* ---------- public entry: handles stdout redirection safely ---------- */
 

@@ -6,7 +6,7 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 14:23:43 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/10/13 19:09:20 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/10/30 16:46:03 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ char	*expand_tilde(char *word, char **envp)
 /*
 this function joins two strings and frees the first one.
 */
-char	*ft_strjoin_free(char *s1, char *s2)
+char	*ft_free_first_str(char *s1, char *s2)
 {
 	char	*joined;
 

@@ -6,31 +6,29 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 14:06:51 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/10/06 19:41:17 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/10/30 17:27:24 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	free_list(t_list **list)
+void free_list(t_list **list)
 {
-	t_list	*temp;
-	t_list	*current;
+    t_list *current;
+    t_list *next;
 
-	if (*list == NULL)
-		return (0);
-	current = *list;
-	while (current->next != *list)
-	{
-		temp = current;
-		current = current->next;
-		free(temp->str);
-		free(temp);
-	}
-	free(current->str);
-	free(current);
-	*list = NULL;
-	return (0);
+    if (!list || !*list)
+        return;
+        
+    current = *list;
+    while (current)
+    {
+        next = current->next;
+        free(current->str);
+        free(current);
+        current = next;
+    }
+    *list = NULL;
 }
 /*
 this function frees a circular linked list
