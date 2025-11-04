@@ -69,6 +69,7 @@ typedef struct s_data
 	int				exit_code;
 	int				pip[2];
 	bool			sq;
+	bool       exit_flag;
 }	t_data;
 
 /* ===================== SHELL STATE (LEGACY) ===================== */
@@ -187,6 +188,6 @@ int		run_simple_command(char *const argv[], char *const envp[], \
 
 /* ===================== MEMORY MANAGEMENT ===================== */
 void	free_token(t_token **list);
-void	free_cmds(t_cmd *cmds);
+void	free_cmds(t_cmd **cmds);
 
 #endif

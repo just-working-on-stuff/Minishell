@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list_token.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 11:36:17 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/10/30 17:36:12 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/11/04 14:24:37 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,24 +63,29 @@ int append_token(t_token **list, char *str, int type)
    Else → insert new token at the end (before head), fixing next/prev links.
    Returns 1 on success. */
  
-   void    free_token(t_token **list)
+   void	free_token(t_token **list)
    {
-       t_token *cur;
-       t_token *next;
+	   t_token	*cur;
+	   t_token	*first;
+	   t_token	*next;
    
-       if (!list || !*list)
-           return;
-       cur = *list;
-       while (cur)
-       {
-           next = cur->next;
-           free(cur->str);
-           free(cur);
-           cur = next;
-       }
-       *list = NULL;
+	   if (!list || !*list)
+		   return ;
+	   cur = *list;
+	   first = *list;
+	   while (cur)
+	   {
+		   next = cur->next;
+		   free(cur->str);
+		   free(cur);
+		   cur = next;
+		   if (cur == first)
+			   break ;
+	   }
+	   *list = NULL;
    }
-   
+
+
 //Free the entire circular token list, including each token string.
 //Resets list pointer to NULL to avoid dangling reference. 
 

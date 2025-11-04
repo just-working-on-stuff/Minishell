@@ -6,7 +6,7 @@
 /*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 16:04:05 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/10/13 16:20:24 by aalbugar         ###   ########.fr       */
+/*   Updated: 2025/11/04 14:13:45 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,8 @@ void	ft_exit(t_data *data, char **args)
 		data->exit_code = 1;
 		return ;
 	}
-	free_cmds(data->cmds);
-	free_token(&data->token);
-	free_list(&data->env);
-	rl_clear_history();
-	exit(ret);
+	data->exit_code = ret;
+    data->exit_flag = true;
+	// NOTE: no free_cmds/free_token/free_list/rl_clear_history here
+	// teardown will run once after the loop ends
 }

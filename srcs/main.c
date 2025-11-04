@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 14:10:23 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/10/30 17:33:37 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/11/04 14:12:10 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ static void	init_data(t_data *data, int argc, char **argv)
 	data->pip[0] = -1;
 	data->pip[1] = -1;
 	data->sq = false;
+	data->exit_flag = false;
 	g_signal_pid = 0;
 }
 

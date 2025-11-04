@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 12:29:31 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/10/30 18:29:47 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/11/04 14:16:46 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,32 +44,40 @@ void	pars_word(t_cmd *cmd, t_token *tok, t_data *data)
 /*
 ** Free a linked list of commands and their argv.
 */
-void free_cmds(t_cmd *cmds)
+void free_cmds(t_cmd **cmds)
 {
     t_cmd *tmp;
     int    i;
 
-    while (cmds)
+    if (!cmds || !*cmds)
+        return; // nothing to free
+
+    while (*cmds)
     {
-        tmp = cmds->next;
-        if (cmds->argv)
+        tmp = (*cmds)->next;
+
+        if ((*cmds)->argv)
         {
             i = 0;
-            while (cmds->argv[i])
+            while ((*cmds)->argv[i])
             {
-                free(cmds->argv[i]);
+                free((*cmds)->argv[i]);
                 i++;
             }
-            free(cmds->argv);
+            free((*cmds)->argv);
         }
-        if (cmds->infile > 2)
-            close(cmds->infile);
-        if (cmds->outfile > 2)
-            close(cmds->outfile);
-        free(cmds);
-        cmds = tmp;
+        if ((*cmds)->infile > 2)
+            close((*cmds)->infile);
+        if ((*cmds)->outfile > 2)
+            close((*cmds)->outfile);
+
+        free(*cmds);
+        *cmds = tmp;
     }
+
+    *cmds = NULL; // prevent double free or dangling pointer
 }
+
 /*
 ** Allocate and initialize a new command node.
 */

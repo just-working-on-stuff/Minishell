@@ -3,32 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   list_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 14:06:51 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/10/30 17:27:24 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/11/04 14:25:01 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void free_list(t_list **list)
+void	free_list(t_list **list)
 {
-    t_list *current;
-    t_list *next;
+	t_list	*current;
+	t_list	*first;
+	t_list	*next;
 
-    if (!list || !*list)
-        return;
-        
-    current = *list;
-    while (current)
-    {
-        next = current->next;
-        free(current->str);
-        free(current);
-        current = next;
-    }
-    *list = NULL;
+	if (!list || !*list)
+		return ;
+	current = *list;
+	first = *list;
+	while (current)
+	{
+		next = current->next;
+		free(current->str);
+		free(current);
+		current = next;
+		if (current == first)
+			break ;
+	}
+	*list = NULL;
 }
 /*
 this function frees a circular linked list
