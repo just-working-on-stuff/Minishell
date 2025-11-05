@@ -6,7 +6,7 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 17:07:42 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/10/30 17:29:22 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/11/05 16:36:45 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,33 +70,11 @@ static char	*get_home_from_env_list(t_list *env)
 	return (NULL);
 }
 
-// static int	handle_cd_to_home(t_list *env)
-// {
-// 	char	*home;
-
-// 	home = get_home_from_env_list(env);
-// 	if (!home)
-// 	{
-// 		ft_putstr_fd("minishell: cd: HOME not set\n", 2);
-// 		return (1);
-// 	}
-// 	return (handle_cd_with_path(home));
-// }
 static int	handle_cd_to_home(t_list *env)
 {
 	char	*home;
 
-	printf("DEBUG: handle_cd_to_home called, env = %p\n", (void*)env);  // ADD THIS
-	
-	if (!env)
-	{
-		printf("DEBUG: ERROR - env is NULL in handle_cd_to_home\n");  // ADD THIS
-		return (1);
-	}
-	
 	home = get_home_from_env_list(env);
-	printf("DEBUG: home = %s\n", home ? home : "NULL");  // ADD THIS
-	
 	if (!home)
 	{
 		ft_putstr_fd("minishell: cd: HOME not set\n", 2);
@@ -111,14 +89,13 @@ int	ft_cd(char **args, t_list **env)
 	char	new_pwd[PATH_MAX];
 
 	if (!env || !*env)
-    {
-        ft_putstr_fd("minishell: cd: no environment\n", 2);
-        return (1);
-    }
-	
+	{
+		ft_putstr_fd("minishell: cd: no environment\n", 2);
+		return (1);
+	}
 	if (!getcwd(old_pwd, PATH_MAX))
 		return (perror("minishell: cd"), 1);
-	if (!args[1] || ft_strcmp(args[1], "~") == 0)
+	if (!args[1])
 	{
 		if (handle_cd_to_home(*env))
 			return (1);

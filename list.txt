@@ -1,0 +1,9 @@
+Makefile
+file.txt
+file1.txt
+libft
+list.txt
+minishell
+minishell.h
+srcs
+test.txt

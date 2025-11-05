@@ -6,7 +6,7 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 20:00:00 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/10/27 20:00:00 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/11/05 16:42:18 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,20 +57,21 @@ int	handle_cd_prev(void)
 
 char	*create_env_var_string(char *key, char *value)
 {
-	char	*new_var;
-	char	*temp;
+	char	*result;
+	size_t	key_len;
+	size_t	value_len;
+	size_t	total_len;
 
 	if (!key || !value)
 		return (NULL);
-	new_var = ft_strjoin(key, "=");
-	if (!new_var)
+	key_len = ft_strlen(key);
+	value_len = ft_strlen(value);
+	total_len = key_len + value_len + 2;
+	result = malloc(total_len);
+	if (!result)
 		return (NULL);
-	temp = ft_strdup(value);
-	if (!temp)
-	{
-		free(new_var);
-		return (NULL);
-	}
-	new_var = ft_strjoin_free(new_var, temp);
-	return (new_var);
+	ft_strlcpy(result, key, total_len);
+	ft_strlcat(result, "=", total_len);
+	ft_strlcat(result, value, total_len);
+	return (result);
 }

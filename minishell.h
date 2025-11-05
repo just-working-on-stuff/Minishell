@@ -143,8 +143,9 @@ int		ft_pwd(void);
 int		ft_env(char **envp);
 int		ft_cd(char **args, t_list **env);
 int		ft_export(char **str, t_list **env);
-int		exec_unset(char **argv, t_shell_state *state);
+// int		exec_unset(char **argv, t_shell_state *state);
 void	ft_exit(t_data *data, char **args);
+int	ft_unset(char **argv, t_list **env);
 
 // Builtin helpers
 int		is_valid_env_var_name(char *name);

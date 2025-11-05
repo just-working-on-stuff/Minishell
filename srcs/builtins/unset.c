@@ -6,9 +6,10 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 12:50:15 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/10/27 19:48:39 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/11/05 16:37:38 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "minishell.h"
 
@@ -43,10 +44,7 @@ static void	remove_env_node(t_list **env, char *name)
 	}
 }
 
-/*
-This function implements the unset builtin command.
-*/
-int	exec_unset(char **argv, t_shell_state *state)
+int	ft_unset(char **argv, t_list **env)
 {
 	int	i;
 
@@ -56,7 +54,7 @@ int	exec_unset(char **argv, t_shell_state *state)
 	while (argv[i])
 	{
 		if (is_valid_env_var_name(argv[i]))
-			remove_env_node(state->env, argv[i]);  // ← FIXED: removed the &
+			remove_env_node(env, argv[i]);
 		else
 		{
 			ft_putstr_fd("minishell: unset: `", 2);
