@@ -6,7 +6,7 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 14:08:52 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/10/30 18:03:59 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/11/06 16:13:37 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ int	ft_export(char **str, t_list **env)
 	{
 		if (!valid_identifier(str[i]))
 		{
-			print_error("export: invalid identifier\n");
+			print_error("export: not a valid identifier\n");
 			exit_code = 1;
 		}
 		else if (!export(str[i], env))

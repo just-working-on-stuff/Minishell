@@ -6,7 +6,7 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 20:00:00 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/11/05 16:45:09 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/11/06 16:15:37 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static bool	check_dir(char **path, char *cmd, t_data *data)
 	if (!S_ISREG(path_stat.st_mode))
 	{
 		ft_putstr_fd(cmd, 2);
-		ft_putstr_fd(": Is a directory\n", 2);
+		ft_putstr_fd(": is a directory\n", 2);
 		data->exit_code = 126;
 		return (false);
 	}
@@ -74,31 +74,37 @@ static void	redirect_in_out(t_data *data, t_cmd *cmd, int *pip)
 	close(pip[1]);
 }
 
-void	child_process(t_data *data, t_cmd *cmd, int *pip)
+void    child_process(t_data *data, t_cmd *cmd, int *pip)
 {
-	char	*path;
-	char	**env;
+    char    *path;
+    char    **env;
 
-	path = NULL;
-	setup_child_signals();
-	if (cmd->skip_cmd)
-		exit(1);
-	else if (is_builtin(cmd->argv[0]))
-	{
-		launch_builtin(data, cmd);
-		exit(data->exit_code);
-	}
-	else if (cmd_exist(&path, data, cmd->argv[0]))
-	{
-		redirect_in_out(data, cmd, pip);
-		env = lst_to_arr(data->env);
-		if (!env)
-			exit(1);
-		execve(path, cmd->argv, env);
-		perror("minishell: execve");
-		free_array(env);
-	}
-	if (path)
-		free(path);
-	exit(data->exit_code);
+    path = NULL;
+    setup_child_signals();
+
+    /* Always configure stdin/stdout first (redir + pipe) */
+    redirect_in_out(data, cmd, pip);
+
+    if (cmd->skip_cmd)
+        exit(1);
+
+    /* Builtins executed in child must now write to the (possibly dup'd) stdout */
+    if (is_builtin(cmd->argv[0]))
+    {
+        launch_builtin(data, cmd);
+        exit(data->exit_code);
+    }
+    /* External command */
+    if (cmd_exist(&path, data, cmd->argv[0]))
+    {
+        env = lst_to_arr(data->env);
+        if (!env)
+            exit(1);
+        execve(path, cmd->argv, env);
+        perror("minishell: execve");
+        free_array(env);
+    }
+    if (path)
+        free(path);
+    exit(data->exit_code);
 }
