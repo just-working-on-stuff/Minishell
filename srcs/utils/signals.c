@@ -17,9 +17,17 @@ volatile sig_atomic_t	g_sigint_received = 0;
 static void	handle_sigint(int signo)
 {
 	(void)signo;
-	g_sigint_received = 1;
+
 	write(STDOUT_FILENO, "\n", 1);
+
+	/* Reset readline state */
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+
+	g_sigint_received = 1;
 }
+
 
 void	setup_parent_signals(void)
 {
@@ -30,11 +38,13 @@ void	setup_parent_signals(void)
 	sa_int.sa_flags = 0;
 	sa_int.sa_handler = handle_sigint;
 	sigaction(SIGINT, &sa_int, NULL);
+
 	sigemptyset(&sa_quit.sa_mask);
 	sa_quit.sa_flags = 0;
 	sa_quit.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &sa_quit, NULL);
 }
+
 
 void	set_parent_ignore_signals(void)
 {
