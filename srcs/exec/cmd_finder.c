@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_finder.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
+/*   By: maram <maram@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 20:00:00 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/11/05 16:41:04 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/12/01 15:26:42 by maram            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,44 +34,61 @@ static char	*get_paths(t_list *env)
 {
 	t_list	*tmp;
 
+	if (!env)
+		return (NULL);
 	tmp = env;
 	while (tmp)
 	{
 		if (ft_strncmp(tmp->str, "PATH=", 5) == 0)
 			return (tmp->str + 5);
 		tmp = tmp->next;
+		if (!tmp || tmp == env)
+			break ;
 	}
 	return (NULL);
 }
 
-static char	*cmd_not_found(char *cmd)
+static char	*handle_empty_or_absolute(char *cmd)
 {
-	ft_putstr_fd(cmd, 2);
-	ft_putstr_fd(": command not found\n", 2);
+	if (!cmd || cmd[0] == '\0')
+	{
+		if (cmd)
+			return (cmd_not_found(cmd, 0));
+		else
+			return (cmd_not_found("", 0));
+	}
+	if (ft_strchr(cmd, '/'))
+		return (ft_strdup(cmd));
 	return (NULL);
 }
 
-char	*find_cmd(t_data *data, char *cmd)
+static char	*search_cmd_in_paths(t_data *data, char *cmd)
 {
 	char	*path_str;
 	char	**paths;
 	char	*full_path;
 
-	if (ft_strchr(cmd, '/'))
-	{
-		if (access(cmd, X_OK) == 0)
-			return (ft_strdup(cmd));
-		return (cmd_not_found(cmd));
-	}
 	path_str = get_paths(data->env);
-	if (!path_str)
-		return (cmd_not_found(cmd));
+	if (!path_str || *path_str == '\0')
+		return (cmd_not_found(cmd, 1));
 	paths = ft_split(path_str, ':');
 	if (!paths)
 		return (NULL);
 	full_path = search_in_path(cmd, paths);
 	free_array(paths);
+	return (full_path);
+}
+
+char	*find_cmd(t_data *data, char *cmd)
+{
+	char	*result;
+	char	*full_path;
+
+	result = handle_empty_or_absolute(cmd);
+	if (result)
+		return (result);
+	full_path = search_cmd_in_paths(data, cmd);
 	if (full_path)
 		return (full_path);
-	return (cmd_not_found(cmd));
+	return (cmd_not_found(cmd, 0));
 }

@@ -3,41 +3,56 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 12:50:15 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/11/05 16:37:38 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/12/05 16:15:42 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "minishell.h"
+
+static int	matches_var_name(char *str, char *name, int name_len)
+{
+	if (ft_strncmp(str, name, name_len) == 0
+		&& (str[name_len] == '=' || str[name_len] == '\0'))
+		return (1);
+	return (0);
+}
+
+static void	remove_node(t_list **env, t_list *current)
+{
+	if (current->next == current)
+	{
+		*env = NULL;
+		free(current->str);
+		free(current);
+		return ;
+	}
+	current->next->prev = current->prev;
+	current->prev->next = current->next;
+	if (current == *env)
+		*env = current->next;
+	free(current->str);
+	free(current);
+}
 
 static void	remove_env_node(t_list **env, char *name)
 {
 	t_list	*current;
-	t_list	*prev;
 	int		name_len;
 
 	if (!env || !*env || !name)
 		return ;
 	name_len = ft_strlen(name);
 	current = *env;
-	prev = NULL;
 	while (1)
 	{
-		if (ft_strncmp(current->str, name, name_len) == 0
-			&& (current->str[name_len] == '=' || current->str[name_len] == '\0'))
+		if (matches_var_name(current->str, name, name_len))
 		{
-			if (prev)
-				prev->next = current->next;
-			else
-				*env = current->next;
-			free(current->str);
-			free(current);
+			remove_node(env, current);
 			return ;
 		}
-		prev = current;
 		current = current->next;
 		if (current == *env)
 			break ;
@@ -56,11 +71,8 @@ int	ft_unset(char **argv, t_list **env)
 		if (is_valid_env_var_name(argv[i]))
 			remove_env_node(env, argv[i]);
 		else
-		{
-			ft_putstr_fd("minishell: unset: `", 2);
-			ft_putstr_fd(argv[i], 2);
-			ft_putstr_fd("': not a valid identifier\n", 2);
-		}
+			error_type_msg(ERR_INVALID_IDENTIFIER,
+				"unset", argv[i], 0);
 		i++;
 	}
 	return (0);

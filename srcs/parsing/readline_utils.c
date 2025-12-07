@@ -6,43 +6,9 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 17:33:37 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/10/27 14:09:11 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/11/20 13:58:37 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "minishell.h"
-
-// char *read_full_line(void)
-// {
-// 	char *line;
-// 	char *next;
-// 	char *tmp;
-
-// 	line = readline("lolipop 🍭$ ");
-// 	if (!line)
-// 	{
-// 		ft_putendl_fd("exit", 1);
-// 		return (NULL);
-// 	}
-// 	while (has_unclosed_quote(line))
-// 	{
-// 		next = readline("> ");
-// 		if (!next)
-// 		{
-// 			ft_putstr_fd("lolipop 🍭$ : unexpected EOF\n", 2);
-// 			free(line);
-// 			return (NULL);
-// 		}
-// 		tmp = ft_strjoin(line, "\n");
-// 		free(line);
-// 		line = ft_strjoin(tmp, next);
-// 		free(tmp);
-// 		free(next);
-// 	}
-// 	return (line);
-// }
-// This function reads a full line from the user, handling multi-line input if there are unclosed quotes.
-
 
 #include "minishell.h"
 
@@ -74,7 +40,13 @@ static int	read_continuation(char **line)
 	next = readline("> ");
 	if (!next)
 	{
-		ft_putstr_fd("lolipop 🍭$ : unexpected EOF\n", 2);
+		if (g_sigint_received)
+		{
+			free(*line);
+			*line = NULL;
+			return (0);
+		}
+		error_type_msg(ERR_UNCLOSED_QUOTE, NULL, NULL, 0);
 		free(*line);
 		*line = NULL;
 		return (0);
@@ -88,9 +60,11 @@ char	*read_full_line(void)
 
 	line = readline("lolipop 🍭$ ");
 	if (!line)
-	{
-		ft_putendl_fd("exit", 1);
 		return (NULL);
+	if (line[0] == '\0')
+	{
+		free(line);
+		return (ft_strdup(""));
 	}
 	while (has_unclosed_quote(line))
 		if (!read_continuation(&line))

@@ -6,119 +6,58 @@
 /*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 14:08:58 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/10/12 16:19:37 by aalbugar         ###   ########.fr       */
+/*   Updated: 2025/12/05 16:31:25 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* ===== helper: get value of variable ===== */
-static char	*get_var_value(char *n, char **envp, int last_exit)
+int	process_dollar(char *word, t_expand *exp)
 {
-	char	*v;
+	int	next;
 
-	if (n[0] == '?' && n[1] == '\0')
-		return (ft_itoa(last_exit));
-	if (!ft_isalpha(n[0]) && n[0] != '_')
-		return (ft_strjoin("$", n)); // literal, not expanded
-	v = find_env_value(n, envp);
-	if (v)
-		return (ft_strdup(v));
-	return (ft_strdup(""));
+	if (word[exp->index] != '$' || exp->in_single)
+		return (0);
+	next = handle_dollar(word, exp->index, exp);
+	if (next == -1)
+		return (-1);
+	exp->index = next;
+	return (1);
 }
 
-static int	parse_braced_var(char *w, int i, char **name)
+bool	handle_marker(char *word, int *index, bool *in_single)
 {
-	int	j;
-
-	j = i + 2;
-	while (w[j] && w[j] != '}')
-		j++;
-	if (!w[j])
+	if (word[*index] == SQ_MARKER)
 	{
-		*name = ft_strdup("");
-		return (-2);
+		*in_single = !*in_single;
+		*index = *index + 1;
+		return (true);
 	}
-	*name = ft_substr(w, i + 2, j - i - 2);
-	return (j + 1);
+	if (word[*index] == DQ_MARKER)
+	{
+		*index = *index + 1;
+		return (true);
+	}
+	return (false);
 }
 
-/* ===== main: handle $ and ${VAR} ===== */
-static int	handle_dollar(char *w, int i,
-	char **res, char **envp, int last_exit)
+int	handle_regular_char(char *word, t_expand *exp)
 {
-	char	*n;
-	char	*v;
-	int		next;
-
-	if (w[i + 1] == '{')
-	{
-		next = parse_braced_var(w, i, &n);
-		if (next == -2) // missing closing brace
-			return (append_part(res, ft_substr(w, i, ft_strlen(w) - i)), ft_strlen(w));
-		i = next;
-	}
-	else
-	{
-		n = extract_var_name(w, i);
-		i += ft_strlen(n) + 1;
-	}
-	v = get_var_value(n, envp, last_exit);
-	if (!v || append_part(res, v) == -1)
-		return (free(n), -1);
-	free(n);
-	return (i);
-}
-
-// Copies non-$ text into the result
-static int copy_plain_text(char *word, int *i, char **result)
-{
-	int start;
-
-	start = *i;
-	while (word[*i] && word[*i] != '$')
-		(*i)++;
-	if (start != *i) // only append if there's something
-	{
-		if (append_part(result, ft_substr(word, start, *i - start)) == -1)
-			return (-1);
-	}
+	if (append_part(&exp->result, ft_substr(word, exp->index, 1)) == -1)
+		return (-1);
+	exp->index++;
 	return (0);
-}
-static char	*expand_loop(char *word, char **envp, int last_exit)
-{
-	char	*res;
-	int		i;
-	int		next;
-
-	res = ft_strdup("");
-	if (!res)
-		return (NULL);
-	i = 0;
-	while (word[i])
-	{
-		if (word[i] == '$')
-		{
-			next = handle_dollar(word, i, &res, envp, last_exit);
-			if (next == -1)
-				return (free(res), NULL);
-			i = next;
-		}
-		else if (copy_plain_text(word, &i, &res) == -1)
-			return (free(res), NULL);
-	}
-	return (res);
 }
 
 char	*expand_value(char *word, char **envp, int last_exit)
 {
 	char	*tmp;
-	char	*res;
+	char	*result;
 
 	tmp = expand_tilde(word, envp);
 	if (!tmp)
 		return (NULL);
-	res = expand_loop(tmp, envp, last_exit);
+	result = expand_loop(tmp, envp, last_exit);
 	free(tmp);
-	return (res);
+	return (result);
 }

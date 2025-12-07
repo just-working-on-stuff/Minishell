@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 14:10:23 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/11/05 16:41:42 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/12/05 17:31:49 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,37 +21,66 @@ static int	make_env2(t_data *data)
 
 	tmp = ft_strdup("OLDPWD");
 	if (!tmp || !append_to_list(&data->env, tmp))
+	{
+		free_env_list(&data->env);
 		return (0);
+	}
 	if (getcwd(path, PATH_MAX) == NULL)
+	{
+		free_env_list(&data->env);
 		return (0);
+	}
 	tmp = ft_strjoin("PWD=", path);
 	if (!tmp || !append_to_list(&data->env, tmp))
+	{
+		free(tmp);
+		free_env_list(&data->env);
 		return (0);
+	}
+	return (1);
+}
+
+static int	add_env_entry(t_data *data, char *env_str)
+{
+	char	*tmp;
+
+	tmp = ft_strdup(env_str);
+	if (tmp == NULL)
+	{
+		free_env_list(&data->env);
+		return (0);
+	}
+	if (!append_to_list(&data->env, tmp))
+	{
+		free(tmp);
+		free_env_list(&data->env);
+		return (0);
+	}
 	return (1);
 }
 
 static int	init_shell_env(t_data *data, char **envp)
 {
 	int		i;
-	char	*tmp;
 
 	i = 0;
-	if (!envp || !envp[0])
-		return (make_env2(data));
-	while (envp[i])
+	if (envp == NULL || envp[0] == NULL)
 	{
-		tmp = ft_strdup(envp[i]);
-		if (!tmp)
+		if (!make_env2(data))
 		{
-			free_list(&data->env);
+			free_env_list(&data->env);
 			return (0);
 		}
-		if (!append_to_list(&data->env, tmp))
+		return (1);
+	}
+	while (envp[i] != NULL)
+	{
+		if (!add_env_entry(data, envp[i]))
 		{
-			free_list(&data->env);
+			free_env_list(&data->env);
 			return (0);
 		}
-		i++;
+		i = i + 1;
 	}
 	return (1);
 }
@@ -78,7 +107,7 @@ int	main(int argc, char **argv, char **envp)
 	init_data(&data, argc, argv);
 	if (!init_shell_env(&data, envp))
 	{
-		ft_putstr_fd("minishell: environment initialization failed\n", 2);
+		error_type_msg(ERR_ENV_INIT, NULL, NULL, 0);
 		return (1);
 	}
 	setup_parent_signals();

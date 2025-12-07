@@ -6,7 +6,7 @@
 /*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 16:35:59 by ghsaad            #+#    #+#             */
-/*   Updated: 2025/10/30 18:21:16 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/11/20 13:54:49 by ghsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,12 @@ char	**lst_to_arr(t_list *env)
 		return (NULL);
 	i = 0;
 	lst = env;
-	dest[i] = ft_strdup(lst->str);  // CHANGED: Use ft_strdup instead of direct pointer
+	dest[i] = ft_strdup(lst->str);
 	lst = lst->next;
 	i++;
 	while (lst != env)
 	{
-		dest[i] = ft_strdup(lst->str);  // CHANGED: Use ft_strdup
+		dest[i] = ft_strdup(lst->str);
 		lst = lst->next;
 		i++;
 	}
@@ -38,8 +38,6 @@ char	**lst_to_arr(t_list *env)
 	return (dest);
 }
 
-
-//swap to elems in array
 static void	ft_swap_str_tab(int i, int j, char **tab)
 {
 	char	*temp;
@@ -49,7 +47,6 @@ static void	ft_swap_str_tab(int i, int j, char **tab)
 	tab[j] = temp;
 }
 
-//sorts array
 void	sort_array(char **arr, int len)
 {
 	int	i;
@@ -66,10 +63,9 @@ void	sort_array(char **arr, int len)
 			if (diff > 0)
 			{
 				ft_swap_str_tab(i, j, arr);
-				continue ;
 			}
 			j++;
 		}
-	i++;
+		i++;
 	}
 }

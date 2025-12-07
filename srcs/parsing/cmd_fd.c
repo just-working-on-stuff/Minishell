@@ -3,72 +3,99 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_fd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/30 10:52:46 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/11/06 17:44:03 by ghsaad           ###   ########.fr       */
+/*   Created: 2025/11/19 14:34:38 by aalbugar          #+#    #+#             */
+/*   Updated: 2025/12/03 14:07:00 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	open_redir_file(int type, char *name)
+static char	*expand_redir_word_cont(t_token *tok, t_data *data)
 {
-	int	fd;
+	char	**env_arr;
+	char	*expanded;
 
-	fd = -1;
-	if (type == TOK_REDIR_IN)
-		fd = open(name, O_RDONLY);
-	else if (type == TOK_REDIR_OUT)
-		fd = open(name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	else if (type == TOK_APPEND)
-		fd = open(name, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (fd == -1)
-		perror(name);
-	return (fd);
-}
-
-static int	open_target(int type, char *name, t_data *data)
-{
-	if (type == TOK_HEREDOC)
-		return (handle_heredoc(name, data));
-	return (open_redir_file(type, name));
-}
-
-static void	apply_fd(t_cmd *cmd, int type, int fd)
-{
-	if (type == TOK_REDIR_IN || type == TOK_HEREDOC)
-	{
-		if (cmd->infile >= 0)
-			close(cmd->infile);
-		cmd->infile = fd;
-	}
+	env_arr = NULL;
+	if (data->env)
+		env_arr = lst_to_arr(data->env);
 	else
+		env_arr = ft_calloc(1, sizeof(char *));
+	if (!env_arr)
 	{
-		if (cmd->outfile >= 0)
-			close(cmd->outfile);
-		cmd->outfile = fd;
+		error_type_msg(ERR_ALLOCATION, NULL, NULL, 0);
+		data->exit_code = 1;
+		return (NULL);
 	}
+	expanded = expand_value(tok->str, env_arr, data->exit_code);
+	free_array(env_arr);
+	if (expanded)
+		return (expanded);
+	error_type_msg(ERR_ALLOCATION, NULL, NULL, 0);
+	data->exit_code = 1;
+	return (NULL);
 }
 
-void	parse_redir(t_cmd *cmd, t_token *tok, t_data *data)
+char	*expand_redir_word(t_token *tok, t_data *data, int type,
+		bool *expand_delim)
 {
-	int		fd;
-	char	*name;
-	int		type;
-
-	if (cmd->skip_cmd)
-		return ;
-	if (!tok->next || tok->next->type != TOK_CMD)
-		return ;
-	name = tok->next->str;
-	type = tok->type;
-	fd = open_target(type, name, data);
-	if (fd < 0)
+	if (!tok)
+		return (NULL);
+	if (type == TOK_HEREDOC)
 	{
-		cmd->skip_cmd = true;
-		data->exit_code = 1;
-		return ;
+		if (expand_delim)
+			*expand_delim = delimiter_should_expand(tok->str);
+		return (strip_markers(tok->str));
 	}
-	apply_fd(cmd, type, fd);
+	return (expand_redir_word_cont(tok, data));
+}
+
+int	open_redir_file(int type, char *name)
+{
+	int	flags;
+
+	if (!name)
+		return (-1);
+	if (type == TOK_REDIR_IN)
+		return (open(name, O_RDONLY));
+	flags = O_WRONLY | O_CREAT;
+	if (type == TOK_REDIR_OUT)
+		flags |= O_TRUNC;
+	else if (type == TOK_APPEND)
+		flags |= O_APPEND;
+	else
+		return (-1);
+	return (open(name, flags, 0644));
+}
+
+int	validate_redir_target(t_cmd *cmd, t_token *tok, t_data *data)
+{
+	t_token	*target;
+	char	*err;
+
+	target = tok->next;
+	if (target && target->type == TOK_CMD)
+		return (1);
+	err = NULL;
+	if (target && target->str && *target->str)
+		err = target->str;
+	error_type_msg(ERR_SYNTAX, NULL, err, 0);
+	cmd->skip_cmd = true;
+	data->exit_code = 258;
+	return (0);
+}
+
+bool	delimiter_should_expand(char *word)
+{
+	int		index;
+
+	index = 0;
+	while (word && word[index])
+	{
+		if (word[index] == SQ_MARKER || word[index] == DQ_MARKER)
+			return (false);
+		index++;
+	}
+	return (true);
 }

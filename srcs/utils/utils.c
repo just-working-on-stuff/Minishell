@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ghsaad <ghsaad@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aalbugar <aalbugar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 15:46:20 by aalbugar          #+#    #+#             */
-/*   Updated: 2025/10/30 16:33:19 by ghsaad           ###   ########.fr       */
+/*   Updated: 2025/11/19 14:32:26 by aalbugar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,12 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 
-bool	print_error(char *str)
+void	ms_set_exit_status(t_data *data, int status)
 {
-	if (str)
-		write(2, str, ft_strlen(str));
-	return (true);
+	data->exit_code = status;
+}
+
+int	ms_get_exit_status(t_data *data)
+{
+	return (data->exit_code);
 }
